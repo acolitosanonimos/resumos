@@ -16,3 +16,24 @@ document.addEventListener("DOMContentLoaded", () => {
     inner.style.transform = "rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px)";
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tabButtons = document.querySelectorAll(".tab-button[data-tab]");
+  const panels = document.querySelectorAll(".tab-panel[data-panel]");
+  if (!tabButtons.length || !panels.length) return;
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = button.dataset.tab;
+
+      tabButtons.forEach((b) => {
+        b.classList.toggle("active", b === button);
+        b.setAttribute("aria-selected", b === button ? "true" : "false");
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === target);
+      });
+    });
+  });
+});
