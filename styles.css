@@ -73,20 +73,66 @@ main,
   gap: 8px;
 }
 
+@keyframes button-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.25), 0 8px 18px rgba(185, 28, 28, 0.18), 0 0 14px rgba(220, 38, 38, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.45), 0 10px 26px rgba(185, 28, 28, 0.3), 0 0 30px rgba(220, 38, 38, 0.55);
+  }
+}
+
+@keyframes button-active-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(127, 29, 29, 0.5), 0 8px 18px rgba(185, 28, 28, 0.3), 0 0 16px rgba(220, 38, 38, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(127, 29, 29, 0.7), 0 12px 30px rgba(185, 28, 28, 0.45), 0 0 34px rgba(220, 38, 38, 0.65);
+  }
+}
+
 .nav-button,
 .menu-button {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  border: 1.5px solid var(--line);
   border-radius: 8px;
-  background: var(--surface);
+  background: #ffffff;
   color: var(--ink);
   text-align: center;
   text-decoration: none;
   font-weight: 750;
   line-height: 1.2;
-  transition: transform 160ms ease, border-color 160ms ease, color 160ms ease, background 160ms ease;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 280ms ease, color 220ms ease, background 320ms ease, box-shadow 320ms ease;
+}
+
+.nav-button::before,
+.menu-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, transparent 30%, rgba(220, 38, 38, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.nav-button::after,
+.menu-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .nav-button {
@@ -105,15 +151,49 @@ main,
 .nav-button:focus-visible,
 .menu-button:focus-visible {
   border-color: var(--red);
-  color: var(--red-dark);
-  transform: translateY(-1px);
+  color: #ffffff;
+  transform: translateY(-3px) scale(1.035);
   outline: none;
+  animation: button-glow-pulse 1.6s ease-in-out infinite;
 }
 
-.nav-button.active {
-  border-color: var(--ink);
-  background: var(--ink);
+.nav-button:hover::before,
+.menu-button:hover::before,
+.nav-button:focus-visible::before,
+.menu-button:focus-visible::before {
+  transform: translateX(120%);
+}
+
+.nav-button:hover::after,
+.menu-button:hover::after,
+.nav-button:focus-visible::after,
+.menu-button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.nav-button:active,
+.menu-button:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+.nav-button.active,
+.menu-button.active,
+.menu-button.primary {
+  border-color: var(--red-dark);
   color: #ffffff;
+  animation: button-active-glow 2.4s ease-in-out infinite;
+}
+
+.nav-button.active::after,
+.menu-button.active::after,
+.menu-button.primary::after {
+  transform: scaleX(1);
+}
+
+.nav-button.active:hover,
+.menu-button.active:hover,
+.menu-button.primary:hover {
+  transform: translateY(-3px) scale(1.035);
 }
 
 .nav-button.disabled,
@@ -123,6 +203,23 @@ main,
   color: #aaaaa8;
   cursor: not-allowed;
   pointer-events: none;
+  animation: none;
+}
+
+.nav-button.disabled::before,
+.nav-button.disabled::after,
+.menu-button.disabled::before,
+.menu-button.disabled::after {
+  content: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-button,
+  .menu-button,
+  .tilt-title .tilt-inner {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .hero {
@@ -144,6 +241,25 @@ h1 {
   font-size: clamp(2.7rem, 7vw, 6.1rem);
   line-height: 0.94;
   letter-spacing: 0;
+}
+
+.tilt-title {
+  display: inline-block;
+  perspective: 800px;
+}
+
+.tilt-title .tilt-inner {
+  display: inline-block;
+  color: var(--red);
+  text-shadow:
+    1px 1px 0 rgba(127, 29, 29, 0.5),
+    2px 2px 0 rgba(127, 29, 29, 0.38),
+    3px 3px 0 rgba(127, 29, 29, 0.28),
+    4px 4px 0 rgba(127, 29, 29, 0.18),
+    7px 9px 16px rgba(0, 0, 0, 0.18);
+  transform-style: preserve-3d;
+  transition: transform 150ms ease-out;
+  will-change: transform;
 }
 
 .hero-copy,
@@ -175,19 +291,6 @@ h1 {
 
 .menu-button.menu-wide {
   grid-column: span 4;
-}
-
-.menu-button.primary {
-  border-color: var(--red);
-  background: var(--red);
-  color: #ffffff;
-}
-
-.menu-button.primary:hover,
-.menu-button.primary:focus-visible {
-  border-color: var(--red-dark);
-  background: var(--red-dark);
-  color: #ffffff;
 }
 
 .content-shell {
