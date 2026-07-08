@@ -5,29 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Resumos</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="aa.ico">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="index.html"><span>R</span>esumos</a>
-      <nav class="top-menu" aria-label="Menu principal">
-        <a class="nav-button menu-wide" href="pages/acolito-2-missa-rezada.html">Acólito 2 (Missa rezada)</a>
-        <a class="nav-button menu-wide" href="pages/acolito-1-missa-rezada.html">Acólito 1 (Missa Rezada)</a>
-        <span class="nav-button menu-wide disabled" aria-disabled="true" title="Em breve">Acólito Sozinho</span>
-        <span class="nav-button disabled" aria-disabled="true" title="Em breve">Cruciferário</span>
-        <a class="nav-button" href="pages/tocheiro.html">Tocheiro</a>
-        <a class="nav-button" href="pages/acolito-2-missa-cantada.html">Acólito 2 (Missa Cantada)</a>
-        <span class="nav-button disabled" aria-disabled="true" title="Em breve">Acólito 1 (Missa Cantada)</span>
-        <span class="nav-button disabled" aria-disabled="true" title="Em breve">Turiferário</span>
-        <span class="nav-button disabled" aria-disabled="true" title="Em breve">Mc</span>
-        <a class="nav-button" href="pages/oracoes-a-decorar.html">Orações a decorar</a>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header" id="site-header"></header>
 
   <main>
     <section class="hero" aria-labelledby="titulo-principal">
-      <h1 id="titulo-principal" class="tilt-title"><span class="tilt-inner">Resumos</span></h1>
+      <div class="hero-brand">
+        <img class="hero-logo" src="aa.png" alt="Acólitos Anônimos" width="140" height="140">
+        <h1 id="titulo-principal" class="tilt-title"><span class="tilt-inner">Resumos</span></h1>
+      </div>
       <p class="hero-copy">Resumos simples e diretos.</p>
     </section>
 
@@ -47,35 +35,35 @@
     </section>
 
     <section class="home-updates">
+      <div class="terminal-card">
+        <div class="terminal-head">
+          <span class="terminal-dot dot-red"></span>
+          <span class="terminal-dot dot-yellow"></span>
+          <span class="terminal-dot dot-green"></span>
+          <span class="terminal-title">ultimas-atualizacoes.log</span>
+        </div>
+        <ul class="terminal-list">
+          <li><span class="terminal-date">[06/07/2026]</span> Nova página "Orações a decorar" com abas Completo, Simples e 15 mais difíceis</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Navbar redesenhada: mais compacta, com brilho estático nos botões</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Título "Resumos" da home ganhou efeito 3D interativo ao passar o mouse</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Corrigido emoji quebrado no resumo de Acólito 1 (missa rezada)</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Botões do site com animações; páginas sem conteúdo marcadas como "em breve"</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Resumos completos de Acólito 1, Acólito 2 (rezada e cantada) e Tocheiro</li>
+          <li><span class="terminal-date">[06/07/2026]</span> Removida referência à Arquiconfraria Santo Estêvão; rodapé atualizado</li>
+        </ul>
+      </div>
+
       <div class="page-card">
         <div class="article">
-          <div class="tab-bar" role="tablist" aria-label="Atualizações e pendências">
-            <button type="button" class="tab-button menu-button active" data-tab="log" role="tab" aria-selected="true">Últimas atualizações</button>
-            <button type="button" class="tab-button menu-button" data-tab="pendencias" role="tab" aria-selected="false">Pendências</button>
-          </div>
-
-          <div class="tab-panel active" data-panel="log">
-            <ul class="log-list">
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Nova página "Orações a decorar" com abas Completo, Simples e 15 mais difíceis</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Navbar redesenhada: mais compacta, com brilho estático nos botões</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Título "Resumos" da home ganhou efeito 3D interativo ao passar o mouse</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Corrigido emoji quebrado no resumo de Acólito 1 (missa rezada)</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Botões do site com animações; páginas sem conteúdo marcadas como "em breve"</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Resumos completos de Acólito 1, Acólito 2 (rezada e cantada) e Tocheiro</span></li>
-              <li><span class="log-date">06/07/2026</span><span class="log-text">Removida referência à Arquiconfraria Santo Estêvão; rodapé atualizado</span></li>
-            </ul>
-          </div>
-
-          <div class="tab-panel" data-panel="pendencias">
-            <ul class="todo-list">
-              <li>Adicionar cortes de vídeos para as funções que já tem resumo</li>
-              <li>Resumo Acólito Sozinho</li>
-              <li>Resumo Cruciferário</li>
-              <li>Resumo Acólito 1 (Missa Cantada)</li>
-              <li>Resumo Turiferário</li>
-              <li>Resumo Mc</li>
-            </ul>
-          </div>
+          <h2>Pendências</h2>
+          <ul class="todo-list">
+            <li>Adicionar cortes de vídeos para as funções que já tem resumo</li>
+            <li>Resumo Acólito Sozinho</li>
+            <li>Resumo Cruciferário</li>
+            <li>Resumo Acólito 1 (Missa Cantada)</li>
+            <li>Resumo Turiferário</li>
+            <li>Resumo Mc</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -85,6 +73,7 @@
     <div class="footer-inner">AA - Acólitos Anônimos - Todos os direitos reservados</div>
   </footer>
 
+  <script src="nav.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
