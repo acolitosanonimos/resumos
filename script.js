@@ -1,40 +1,90 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const zone = document.querySelector(".hero") || document.querySelector(".tilt-title");
-  const inner = document.querySelector(".tilt-title .tilt-inner");
-  if (!zone || !inner) return;
+  const title = document.querySelector(".tilt-title");
+  const inner = title?.querySelector(".tilt-inner");
+  if (!title || !inner) return;
 
-  const tiltTo = (clientX, clientY) => {
-    const rect = zone.getBoundingClientRect();
-    const x = (clientX - rect.left) / rect.width;
-    const y = (clientY - rect.top) / rect.height;
-    const rotateY = (x - 0.5) * 90;
-    const rotateX = (0.5 - y) * 90;
-    inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.35) translateZ(50px)`;
+  let rotationX = 0;
+  let rotationY = 0;
+  let velocityX = 0;
+  let velocityY = 0;
+  let lastX = 0;
+  let lastY = 0;
+  let lastTime = 0;
+  let isDragging = false;
+  let frameId = 0;
+
+  const render = () => {
+    inner.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
   };
 
-  const resetTilt = () => {
-    inner.style.transform = "rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px)";
+  const stopMomentum = () => {
+    if (!frameId) return;
+    cancelAnimationFrame(frameId);
+    frameId = 0;
   };
 
-  zone.addEventListener("mousemove", (event) => tiltTo(event.clientX, event.clientY));
-  zone.addEventListener("mouseleave", resetTilt);
+  const glide = () => {
+    rotationX += velocityX;
+    rotationY += velocityY;
+    velocityX *= 0.975;
+    velocityY *= 0.975;
+    render();
 
-  zone.addEventListener(
-    "touchmove",
-    (event) => {
-      const touch = event.touches[0];
-      if (!touch) return;
-      tiltTo(touch.clientX, touch.clientY);
-    },
-    { passive: true }
-  );
-  zone.addEventListener("touchstart", (event) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    tiltTo(touch.clientX, touch.clientY);
+    if (Math.abs(velocityX) < 0.02 && Math.abs(velocityY) < 0.02) {
+      frameId = 0;
+      return;
+    }
+
+    frameId = requestAnimationFrame(glide);
+  };
+
+  const startMomentum = () => {
+    stopMomentum();
+    frameId = requestAnimationFrame(glide);
+  };
+
+  title.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastTime = performance.now();
+    velocityX = 0;
+    velocityY = 0;
+    stopMomentum();
+    title.classList.add("is-dragging");
+    title.setPointerCapture(event.pointerId);
   });
-  zone.addEventListener("touchend", resetTilt);
-  zone.addEventListener("touchcancel", resetTilt);
+
+  title.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+
+    const now = performance.now();
+    const elapsed = Math.max(now - lastTime, 16);
+    const deltaX = event.clientX - lastX;
+    const deltaY = event.clientY - lastY;
+
+    rotationY += deltaX * 0.75;
+    rotationX -= deltaY * 0.75;
+    velocityY = (deltaX / elapsed) * 18;
+    velocityX = (-deltaY / elapsed) * 18;
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastTime = now;
+    render();
+  });
+
+  const finishDrag = (event) => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    title.classList.remove("is-dragging");
+    title.releasePointerCapture(event.pointerId);
+    startMomentum();
+  };
+
+  title.addEventListener("pointerup", finishDrag);
+  title.addEventListener("pointercancel", finishDrag);
 });
 
 document.addEventListener("DOMContentLoaded", () => {

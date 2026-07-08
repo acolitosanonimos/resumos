@@ -380,8 +380,7 @@ body.nav-open {
 
 @media (prefers-reduced-motion: reduce) {
   .nav-button,
-  .menu-button,
-  .tilt-title .tilt-inner {
+  .menu-button {
     animation: none !important;
     transition: none !important;
   }
@@ -424,6 +423,20 @@ h1 {
 .tilt-title {
   display: inline-block;
   perspective: 350px;
+  margin: -18px;
+  padding: 18px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.tilt-title.is-dragging {
+  cursor: grabbing;
 }
 
 .tilt-title .tilt-inner {
@@ -436,8 +449,14 @@ h1 {
     4px 4px 0 rgba(127, 29, 29, 0.18),
     7px 9px 16px rgba(0, 0, 0, 0.18);
   transform-style: preserve-3d;
-  transition: transform 260ms cubic-bezier(0.34, 1.61, 0.64, 1);
+  transform-origin: center;
   will-change: transform;
+}
+
+.tilt-title:focus-visible {
+  outline: 3px solid rgba(185, 28, 28, 0.35);
+  outline-offset: 8px;
+  border-radius: 8px;
 }
 
 .hero-copy,
