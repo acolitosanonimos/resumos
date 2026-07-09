@@ -9,7 +9,10 @@
     { label: "Acólito 1 (Missa Cantada)" },
     { label: "Turiferário" },
     { label: "Mc" },
-    { label: "Orações a decorar", href: "oracoes-a-decorar.html" }
+    { label: "Orações a decorar", href: "oracoes-a-decorar.html" },
+    { label: "Oração da Arquiconfraria", href: "oracao-arquiconfraria.html" },
+    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" },
+    { label: "Manual da missa rezada", href: "manual-missa-rezada.html", wide: true }
   ];
 
   function init() {
