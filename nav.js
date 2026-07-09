@@ -2,7 +2,7 @@
   var NAV_ITEMS = [
     { label: "Acólito 2 (Missa rezada)", href: "acolito-2-missa-rezada.html", wide: true },
     { label: "Acólito 1 (Missa Rezada)", href: "acolito-1-missa-rezada.html", wide: true },
-    { label: "Acólito Sozinho", wide: true },
+    { label: "Acólito Sozinho", href: "manual-missa-rezada.html", wide: true },
     { label: "Cruciferário" },
     { label: "Tocheiro", href: "tocheiro.html" },
     { label: "Acólito 2 (Missa Cantada)", href: "acolito-2-missa-cantada.html" },
@@ -11,8 +11,7 @@
     { label: "Mc" },
     { label: "Orações a decorar", href: "oracoes-a-decorar.html" },
     { label: "Oração da Arquiconfraria", href: "oracao-arquiconfraria.html" },
-    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" },
-    { label: "Manual da missa rezada", href: "manual-missa-rezada.html", wide: true }
+    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" }
   ];
 
   function init() {
