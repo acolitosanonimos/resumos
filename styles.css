@@ -409,8 +409,8 @@ body.nav-open {
   flex: none;
   display: inline-grid;
   place-items: center;
-  margin: -14px;
-  padding: 14px;
+  margin: -28px;
+  padding: 28px;
   border: 0;
   background: transparent;
   perspective: 420px;
@@ -1138,8 +1138,8 @@ h1 {
   }
 
   .hero-logo-button {
-    margin: -10px;
-    padding: 10px;
+    margin: -18px;
+    padding: 18px;
   }
 
   h1 {
