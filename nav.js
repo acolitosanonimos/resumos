@@ -11,7 +11,12 @@
     { label: "Mc" },
     { label: "Orações a decorar", href: "oracoes-a-decorar.html" },
     { label: "Oração da Arquiconfraria", href: "oracao-arquiconfraria.html" },
-    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" }
+    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" },
+    { label: "Missa Solene: Padre" },
+    { label: "Missa Solene: Diácono" },
+    { label: "Missa Solene: Subdiácono" },
+    { label: "Missa Solene: Mc" },
+    { label: "Missa Solene: Acólitos e Tf" }
   ];
 
   function init() {

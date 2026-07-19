@@ -521,6 +521,17 @@ h1 {
   grid-column: 1 / span 4;
 }
 
+/* Spans the full track so the buttons that follow always start a fresh row. */
+.menu-group-title {
+  grid-column: 1 / -1;
+  margin: 16px 0 0;
+  color: var(--red);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .content-shell {
   padding: 58px 0 86px;
 }
