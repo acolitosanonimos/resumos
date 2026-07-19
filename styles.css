@@ -1010,6 +1010,25 @@ h1 {
   background: #ffffff;
 }
 
+.todo-list li.done {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+
+.todo-list li.done::before {
+  content: "\2713";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: var(--red);
+  background: var(--red);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .terminal-card {
   border: 1px solid #2a1414;
   border-radius: 8px;
