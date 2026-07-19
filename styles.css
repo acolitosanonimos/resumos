@@ -844,6 +844,18 @@ h1 {
   color: var(--red-dark);
 }
 
+.step-note p {
+  margin: 0 0 8px;
+}
+
+.step-note p:last-child {
+  margin-bottom: 0;
+}
+
+.step-note + .step-note {
+  margin-top: 8px;
+}
+
 .timeline {
   list-style: none;
   margin: 0 0 6px 14px;
