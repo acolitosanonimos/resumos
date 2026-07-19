@@ -1,22 +1,42 @@
 (function () {
-  var NAV_ITEMS = [
-    { label: "Acólito 2 (Missa rezada)", href: "acolito-2-missa-rezada.html", wide: true },
-    { label: "Acólito 1 (Missa Rezada)", href: "acolito-1-missa-rezada.html", wide: true },
-    { label: "Acólito Sozinho", href: "manual-missa-rezada.html", wide: true },
-    { label: "Cruciferário", href: "cruciferario.html" },
-    { label: "Tocheiro", href: "tocheiro.html" },
-    { label: "Acólito 2 (Missa Cantada)", href: "acolito-2-missa-cantada.html" },
-    { label: "Acólito 1 (Missa Cantada)" },
-    { label: "Turiferário" },
-    { label: "Mc" },
-    { label: "Orações a decorar", href: "oracoes-a-decorar.html" },
-    { label: "Oração da Arquiconfraria", href: "oracao-arquiconfraria.html" },
-    { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" },
-    { label: "Missa Solene: Padre" },
-    { label: "Missa Solene: Diácono" },
-    { label: "Missa Solene: Subdiácono" },
-    { label: "Missa Solene: Mc" },
-    { label: "Missa Solene: Acólitos e Tf" }
+  var NAV_GROUPS = [
+    {
+      title: "Missa Rezada",
+      items: [
+        { label: "Acólito 2", href: "acolito-2-missa-rezada.html" },
+        { label: "Acólito 1", href: "acolito-1-missa-rezada.html" },
+        { label: "Acólito Sozinho", href: "manual-missa-rezada.html" }
+      ]
+    },
+    {
+      title: "Missa Cantada",
+      items: [
+        { label: "Acólito 2", href: "acolito-2-missa-cantada.html" },
+        { label: "Acólito 1" },
+        { label: "Cruciferário", href: "cruciferario.html" },
+        { label: "Tocheiro", href: "tocheiro.html" },
+        { label: "Turiferário" },
+        { label: "Mc" }
+      ]
+    },
+    {
+      title: "A decorar",
+      items: [
+        { label: "Orações a decorar", href: "oracoes-a-decorar.html" },
+        { label: "Oração da Arquiconfraria", href: "oracao-arquiconfraria.html" },
+        { label: "4 regras & 4 recomendações", href: "regras-recomendacoes.html" }
+      ]
+    },
+    {
+      title: "Missa Solene",
+      items: [
+        { label: "Padre" },
+        { label: "Diácono" },
+        { label: "Subdiácono" },
+        { label: "Mc" },
+        { label: "Acólitos e Tf" }
+      ]
+    }
   ];
 
   function init() {
@@ -30,7 +50,6 @@
 
     function renderItem(item) {
       var classes = ["nav-button"];
-      if (item.wide) classes.push("menu-wide");
       if (!item.href) {
         classes.push("disabled");
         return '<span class="' + classes.join(" ") + '" aria-disabled="true" title="Em breve">' + item.label + "</span>";
@@ -40,7 +59,9 @@
       return '<a class="' + classes.join(" ") + '" href="' + href + '">' + item.label + "</a>";
     }
 
-    var linksHtml = NAV_ITEMS.map(renderItem).join("");
+    var linksHtml = NAV_GROUPS.map(function (group) {
+      return '<h2 class="nav-group-title">' + group.title + "</h2>" + group.items.map(renderItem).join("");
+    }).join("");
     var logoHref = base === "pages/" ? "aa.png" : "../aa.png";
 
     root.innerHTML =

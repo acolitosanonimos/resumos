@@ -213,6 +213,19 @@ main,
   padding: 16px 18px 28px;
 }
 
+.nav-group-title {
+  margin: 12px 0 2px;
+  color: var(--red);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nav-group-title:first-child {
+  margin-top: 0;
+}
+
 .drawer-nav .nav-button {
   grid-column: auto;
   width: 100%;
