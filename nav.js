@@ -30,10 +30,10 @@
     {
       title: "Missa Solene",
       items: [
-        { label: "Padre" },
-        { label: "Diácono" },
-        { label: "Subdiácono" },
-        { label: "Mc" },
+        { label: "Celebrante", href: "missa-solene-celebrante.html" },
+        { label: "Diácono", href: "missa-solene-diacono.html" },
+        { label: "Subdiácono", href: "missa-solene-subdiacono.html" },
+        { label: "Mc", href: "missa-solene-mc.html" },
         { label: "Acólitos e Tf" }
       ]
     }
