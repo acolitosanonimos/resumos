@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Questionário Pe. Reus - Resumos</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../aa.ico">
+  <style>
+    .quiz-controls {
+      position: sticky;
+      top: 66px;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px 34px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .quiz-mode-btn {
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 9px 18px;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 200ms ease, color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .quiz-mode-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .quiz-mode-btn.active {
+      border-color: var(--red-dark);
+      background: var(--red);
+      color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(127, 29, 29, 0.4), 0 6px 14px rgba(185, 28, 28, 0.22);
+    }
+
+    .quiz-root {
+      padding: 8px 34px 30px;
+    }
+
+    .qsection {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .qsection-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 4px;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .qsection-title {
+      flex: 1;
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--red-dark);
+    }
+
+    .qsection-count {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .qsection-chevron,
+    .q-chevron {
+      flex: none;
+      font-size: 1.1rem;
+      color: var(--red);
+      transition: transform 220ms ease;
+    }
+
+    .qsection.open > .qsection-head .qsection-chevron,
+    .q.open .q-chevron {
+      transform: rotate(90deg);
+    }
+
+    .qsection-body {
+      display: none;
+      padding: 0 0 12px;
+    }
+
+    .qsection.open > .qsection-body {
+      display: block;
+    }
+
+    .q {
+      border-top: 1px dashed var(--line);
+    }
+
+    .q:first-child {
+      border-top: 0;
+    }
+
+    .q-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 13px 6px;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .q-num {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      height: 30px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: var(--red);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .q-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .q-body {
+      display: none;
+      padding: 2px 6px 16px 48px;
+    }
+
+    .q.open .q-body {
+      display: block;
+    }
+
+    .q-empty {
+      margin: 0;
+      padding: 12px 14px;
+      border: 1px dashed rgba(185, 28, 28, 0.35);
+      border-radius: 8px;
+      background: rgba(185, 28, 28, 0.05);
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .q-answer {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 560px) {
+      .quiz-controls { padding: 12px 18px; top: 58px; }
+      .quiz-root { padding: 4px 18px 24px; }
+      .q-body { padding-left: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+
+  <main class="content-shell">
+    <article class="page-card">
+      <div class="page-title">
+        <p class="kicker">Estudo &middot; Pe. Reus</p>
+        <h1>Questionário</h1>
+        <p class="page-copy">As 90 questões, divididas em seções. Clique numa seção ou numa questão para abrir. As respostas serão adicionadas depois.</p>
+      </div>
+
+      <div class="quiz-controls" role="group" aria-label="Modos de exibição">
+        <button type="button" class="quiz-mode-btn" data-mode="all">Mostrar tudo</button>
+        <button type="button" class="quiz-mode-btn" data-mode="hide">Esconder tudo</button>
+        <button type="button" class="quiz-mode-btn" data-mode="sections">Seções</button>
+      </div>
+
+      <div class="quiz-root" id="quiz-root"></div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">AA - Acólitos Anônimos - Todos os direitos reservados</div>
+  </footer>
+
+  <script src="../nav.js"></script>
+  <script>
+    // As 90 questoes em 14 secoes (o arquivo-fonte tem 2 "Partes" + 12 secoes
+    // em algarismos romanos). Para adicionar uma resposta, preencha o campo `a`
+    // da questao com HTML (ex.: a: "<p>Resposta...</p>"); vazio mostra o aviso.
+    var QUIZ = [
+      {
+        title: "Parte I — Liturgia",
+        range: "Questões 1–10",
+        items: [
+          { n: 1, q: "Exponha a definição nominal de \"Liturgia\": indique a etimologia da palavra e os quatro significados que ela teve (na antiguidade profana, no Novo Testamento e no uso eclesiástico).", a: "" },
+          { n: 2, q: "Distinga com precisão os termos rito, cerimônia e rubrica. Por que as rubricas têm esse nome, e como se dividem?", a: "" },
+          { n: 3, q: "Explique a distinção entre rubricas preceptivas e diretivas. Que qualificação têm, p. ex., as rubricas que regulam o que se deve fazer antes e depois da missa?", a: "" },
+          { n: 4, q: "Exponha as regras das conclusões das orações litúrgicas: quando se diz <em>Per Dominum</em>, <em>Qui vivis</em>, <em>Per eundem</em>, <em>Qui tecum</em> e <em>in unitate eiusdem Spiritus Sancti</em>?", a: "" },
+          { n: 5, q: "Descreva como se faz a genuflexão simples e indique as regras práticas: onde genuflectem os paramentados, quem a faz com as mãos sobre o altar, e que se saúda com genuflexão simples?", a: "" },
+          { n: 6, q: "Quais as três espécies de altares quanto à estabilidade? Indique os requisitos do altar fixo e a definição da pedra de ara.", a: "" },
+          { n: 7, q: "Quais são as cores litúrgicas estabelecidas por São Pio V para a Igreja universal e desde quando o cânon das cores está essencialmente fixo? Em que dias se admite a cor rosa?", a: "" },
+          { n: 8, q: "Qual a regra que determina o início do advento?", a: "" },
+          { n: 9, q: "Explique as regras relativas à recitação do Credo na missa (i.e., quando o Credo ocorre).", a: "" },
+          { n: 10, q: "Que deve fazer o celebrante se o cálice cair depois da consagração? E se for impossível recolher quantidade suficiente do Preciosíssimo Sangue?", a: "" }
+        ]
+      },
+      {
+        title: "Parte II — Cerimonial",
+        range: "Questões 11–20",
+        items: [
+          { n: 11, q: "Descreva como se faz a genuflexão dupla, e dê um exemplo do uso dela.", a: "" },
+          { n: 12, q: "Enumere os tipos de inclinação do corpo e da cabeça, explicando como se faz cada uma e dando um exemplo de uso.", a: "" },
+          { n: 13, q: "Exponha as regras das genuflexões dos ministros maiores na missa solene: quais se fazem <em>in plano</em> e quais <em>in gradu</em>, e quando se genuflete estando ou não o Santíssimo sobre o altar.", a: "" },
+          { n: 14, q: "Descreva o rito do Lavabo na missa rezada: o que o acólito prepara, qual a deixa para subir, e como procede.", a: "" },
+          { n: 15, q: "Indique todos os toques de campainha do servidor na missa rezada, do <em>Sanctus</em> ao <em>Domine non sum dignus</em>, com o número de toques em cada momento.", a: "" },
+          { n: 16, q: "Qual é a função do mestre de cerimônias, que sinais convencionais usa para dirigir o coro e os ministros, e como deve proceder diante de um erro de menor importância?", a: "" },
+          { n: 17, q: "Distinga o <em>ductus</em> (movimento) simples e o duplo na incensação. De que nível se incensa o Santíssimo Sacramento? Quantos movimentos recebe o celebrante e com que reverências?", a: "" },
+          { n: 18, q: "Indique a ordem hierárquica completa da incensação feita pelo turiferário depois da incensação do ofertório, na missa solene, com o número de movimentos para cada categoria.", a: "" },
+          { n: 19, q: "Como se organiza a procissão do Evangelho na missa solene e qual a disposição dos ministros no lugar do canto do Evangelho?", a: "" },
+          { n: 20, q: "Como e quantas vezes se toca a campainha durante a bênção com o Santíssimo? Que faz o MC imediatamente depois?", a: "" }
+        ]
+      },
+      {
+        title: "I. Noções fundamentais de Liturgia",
+        range: "Questões 21–25",
+        items: [
+          { n: 21, q: "Qual é o objeto primário da Liturgia sacra? Explique o que é o culto latrêutico e como a Liturgia presta culto explícito às Pessoas divinas.", a: "" },
+          { n: 22, q: "Quem é o primeiro sujeito (liturgo principal) da Liturgia? Fundamente a resposta com o Concílio Tridentino e com a célebre sentença de Santo Agostinho.", a: "" },
+          { n: 23, q: "Quais as duas condições necessárias para que um ato de culto seja litúrgico (público)? Dê ao menos quatro exemplos de atos litúrgicos além da missa.", a: "" },
+          { n: 24, q: "Quais são os três fins das cerimônias, segundo as declarações do Concílio Tridentino e do Papa Sisto V comentadas pelo Pe. Reus? Explique brevemente cada um.", a: "" },
+          { n: 25, q: "Os sinais ou símbolos litúrgicos dividem-se em morais e místicos. Explique a diferença e dê um exemplo de cada.", a: "" }
+        ]
+      },
+      {
+        title: "II. Legislação, livros litúrgicos e rubricas",
+        range: "Questões 26–29",
+        items: [
+          { n: 26, q: "A quem pertence o direito supremo de legislar sobre a Liturgia e qual a natureza desse direito? Qual o papel da Sagrada Congregação dos Ritos?", a: "" },
+          { n: 27, q: "O costume pode originar leis litúrgicas? Que vale, em particular, para os costumes contrários às rubricas da missa? Cite exemplos de costumes tolerados.", a: "" },
+          { n: 28, q: "Que é a edição típica de um livro litúrgico e que se exige das edições juxtatípicas?", a: "" },
+          { n: 29, q: "Que condições devem preencher os decretos da S. Congregação dos Ritos para terem força obrigatória, e qual a sua autoridade? Como se dividem?", a: "" }
+        ]
+      },
+      {
+        title: "III. As santas palavras e os santos sinais",
+        range: "Questões 30–38",
+        items: [
+          { n: 30, q: "Enumere e explique as quatro qualidades que recomendam a língua latina como língua litúrgica.", a: "" },
+          { n: 31, q: "Qual é a estrutura geral das orações (coletas) da Liturgia romana? A quem se dirigem as coletas da missa e por quê?", a: "" },
+          { n: 32, q: "Qual a origem e o significado do Aleluia? Quando e por que é suprimido na Liturgia?", a: "" },
+          { n: 33, q: "Que significa, na Liturgia, a posição de pé? Quando o celebrante e o povo ficam de pé, e qual a regra para os assistentes da missa privada?", a: "" },
+          { n: 34, q: "Quais as significações do ósculo litúrgico? Qual a ordem dos ósculos ao entregar e ao receber um objeto nas funções litúrgicas?", a: "" },
+          { n: 35, q: "Trace a evolução histórica do modo de fazer o sinal da cruz e descreva como se faz hoje o pequeno sinal (persignação) e a grande cruz.", a: "" },
+          { n: 36, q: "Para que usos serve a água na Liturgia? Exponha, segundo o Catecismo Romano, as três razões da mistura de água e vinho na missa.", a: "" },
+          { n: 37, q: "Qual é a matéria válida para a preparação das hóstias? Que matéria seria inválida ou duvidosa?", a: "" },
+          { n: 38, q: "Que determina a legislação litúrgica sobre a luz elétrica no altar e na igreja?", a: "" }
+        ]
+      },
+      {
+        title: "IV. Os santos lugares e os acessórios do altar",
+        range: "Questões 39–44",
+        items: [
+          { n: 39, q: "Exponha o simbolismo do altar segundo a tradição litúrgica.", a: "" },
+          { n: 40, q: "Quantas toalhas deve ter o altar, de que matéria, e como devem ser dispostas? Quem as benze?", a: "" },
+          { n: 41, q: "Que é o corporal, que simboliza, e onde convém bordar a sua cruz? Por quê?", a: "" },
+          { n: 42, q: "Quais os requisitos da cruz do altar e em que lugares ela não pode ser colocada?", a: "" },
+          { n: 43, q: "Que é o coro (presbitério) e que móveis devem guarnecê-lo? Descreva a credência e o banco.", a: "" },
+          { n: 44, q: "Em que três casos é proibido o toque da campainha na missa? Que sinais são prescritos e quais são apenas tolerados?", a: "" }
+        ]
+      },
+      {
+        title: "V. As vestes e os vasos sagrados",
+        range: "Questões 45–52",
+        items: [
+          { n: 45, q: "Exponha o simbolismo de cada cor litúrgica e as principais restrições: que cores são proibidas, que telas podem substituir as cores, e que se veda nos paramentos pretos?", a: "" },
+          { n: 46, q: "Em que casos as vestes litúrgicas perdem a bênção? O forro renovado exige nova bênção?", a: "" },
+          { n: 47, q: "Qual a origem histórica do manípulo, como é usado hoje e quando nunca se deve usá-lo?", a: "" },
+          { n: 48, q: "Como trazem a estola o Bispo, o sacerdote e o diácono? Em que casos o seu uso é obrigatório e quando é proibida?", a: "" },
+          { n: 49, q: "Exponha a origem da casula e o que era a <em>planeta plicata</em> do diácono.", a: "" },
+          { n: 50, q: "Quando é proibido e quando é prescrito o uso do barrete nas funções sagradas?", a: "" },
+          { n: 51, q: "Que matéria exige a lei eclesiástica para o cálice? Por quem deve ser consagrado, em que casos fica execrado, e que obrigação há quando a douradura se gasta?", a: "" },
+          { n: 52, q: "Quando foi introduzida a custódia (ostensório) e por ocasião de quê? Que requisito é prescrito para ela?", a: "" }
+        ]
+      },
+      {
+        title: "VI. O tempo sacro",
+        range: "Questões 53–60",
+        items: [
+          { n: 53, q: "Como se deu a substituição do sábado pelo domingo como dia do culto? Cite os testemunhos escriturísticos e explique os nomes \"dies dominica\" e \"dies solis\".", a: "" },
+          { n: 54, q: "Como se classificam os domingos quanto ao rito e quanto à dignidade? Enumere os dez domingos de primeira classe e diga qual o seu privilégio.", a: "" },
+          { n: 55, q: "Que são as quatro têmporas e em que semanas ocorrem? Que ensina o Papa S. Leão Magno sobre sua origem?", a: "" },
+          { n: 56, q: "A festa do Natal era conhecida nos três primeiros séculos? Quando aparece pela primeira vez a data de 25 de dezembro, e que festa pagã ela veio substituir?", a: "" },
+          { n: 57, q: "De que três milagres a Epifania é festa coletiva?", a: "" },
+          { n: 58, q: "Que festa se celebra a 2 de fevereiro e por que é festa do Senhor? Com que cor se faz a procissão das velas?", a: "" },
+          { n: 59, q: "Qual a origem da quaresma e por que ela começa na quarta-feira de cinzas e não no primeiro domingo?", a: "" },
+          { n: 60, q: "Donde deriva a cerimônia de velar as imagens no tempo da paixão e que significava o véu quaresmal?", a: "" }
+        ]
+      },
+      {
+        title: "VII. A santa missa: explicação, rubricas e cerimônias",
+        range: "Questões 61–68",
+        items: [
+          { n: 61, q: "Qual a verdadeira etimologia da palavra \"missa\" e como ela passou a designar o santo sacrifício?", a: "" },
+          { n: 62, q: "Qual a origem do Kyrie da missa? Por que se acrescentou o <em>Christe eleison</em> e desde quando as invocações são nove?", a: "" },
+          { n: 63, q: "Exponha a história da introdução do Credo na missa: por que surgiu, que concílio o prescreveu e quando foi admitido na Liturgia romana?", a: "" },
+          { n: 64, q: "Que simboliza a mistura da água com o vinho no ofertório? Por que a água é benzida — e por que não se benze na missa de réquiem?", a: "" },
+          { n: 65, q: "Trace a história da elevação das sagradas espécies na missa: quando surgiu a elevação da hóstia, do cálice, a genuflexão de adoração e a incensação do Santíssimo?", a: "" },
+          { n: 66, q: "Por quem foi introduzido o <em>Agnus Dei</em> na missa? Por que ele falta na missa do sábado santo, e desde quando se repete três vezes?", a: "" },
+          { n: 67, q: "Defina, quanto à solenidade, a missa cantada, a missa solene, a missa privada e a missa pontifical. A missa rezada acompanhada de canto é missa cantada no sentido litúrgico?", a: "" },
+          { n: 68, q: "Na celebração da missa rezada, quando o celebrante conserva os olhos baixos, e em que momentos deve elevá-los? Em que ocasiões os conserva fixos no SS. Sacramento?", a: "" }
+        ]
+      },
+      {
+        title: "VIII. Reverências litúrgicas e princípios gerais",
+        range: "Questões 69–71",
+        items: [
+          { n: 69, q: "Em que casos não se devem fazer inclinações? Que regra vale quando muitos nomes santos se seguem de perto?", a: "" },
+          { n: 70, q: "Exponha os princípios gerais para os servidores do altar: precedência em procissão, genuflexão ao cruzar o meio do altar, para onde se voltam após a genuflexão, posição da mão livre, e quando fazem as mesmas inclinações que o sacerdote.", a: "" },
+          { n: 71, q: "Em que dias há <em>Asperges</em> antes da missa cantada ou solene? Que particularidade há quanto ao manípulo dos ministros quando há <em>Asperges</em>?", a: "" }
+        ]
+      },
+      {
+        title: "IX. Missa rezada com um ou dois acólitos",
+        range: "Questões 72–76",
+        items: [
+          { n: 72, q: "Que reverências faz o servidor durante as orações ao pé do altar na missa rezada, especialmente ao <em>Misereatur</em> e ao <em>Confiteor</em>? Por que não faz inclinação profunda do corpo quando ajoelhado?", a: "" },
+          { n: 73, q: "Como o servidor transporta o missal para o lado do Evangelho antes do Evangelho, e como o recoloca no lado da Epístola nas abluções? Pode virar o missal para os Próprios?", a: "" },
+          { n: 74, q: "Na missa rezada, quando o servidor busca a patena de comunhão e quando recita o <em>Confiteor</em>? Onde segura a patena durante a distribuição, e quando pode levantar-se depois da comunhão?", a: "" },
+          { n: 75, q: "Na missa rezada com dois acólitos, como se dividem as tarefas no ofertório, na comunhão dos próprios acólitos e nas abluções?", a: "" },
+          { n: 76, q: "Como procede o servidor nas preces leoninas após a missa rezada? Por que não bate no peito ao <em>Cor Jesu Sacratissimum</em>?", a: "" }
+        ]
+      },
+      {
+        title: "X. Missa cantada: o mestre de cerimônias e os ministros inferiores",
+        range: "Questões 77–83",
+        items: [
+          { n: 77, q: "Que ósculos (<em>solita oscula</em>) observa o mestre de cerimônias ao entregar e ao receber objetos do celebrante?", a: "" },
+          { n: 78, q: "Em que mão o turiferário segura o turíbulo, e por quê? Quando o incenso deixa de ser considerado bento?", a: "" },
+          { n: 79, q: "Que fórmula usa o mestre de cerimônias ao pedir a bênção do incenso? Que muda quando o celebrante é um bispo?", a: "" },
+          { n: 80, q: "Quando os ceroferários entram no santuário na missa cantada, quem os conduz, e quais são as suas posições? Que reverência fazem às genuflexões do celebrante na consagração?", a: "" },
+          { n: 81, q: "Que gestos cerimoniais fazem os acólitos enquanto seguram as velas? Genuflectem quando acompanham o cruciferário? Como procedem durante o canto do Evangelho?", a: "" },
+          { n: 82, q: "Enumere as regras próprias do cruciferário: como segura a cruz, que reverências faz com ela, quem passa primeiro nas portas, e como coloca a cruz no suporte (para onde a cruz está virada).", a: "" },
+          { n: 83, q: "Onde fica o mestre de cerimônias durante o Último Evangelho na missa cantada?", a: "" }
+        ]
+      },
+      {
+        title: "XI. Missa solene",
+        range: "Questões 84–87",
+        items: [
+          { n: 84, q: "Que preparação remota e próxima se exige dos ministros sagrados para a missa solene? Com que paramentos se vestem o diácono e o subdiácono?", a: "" },
+          { n: 85, q: "Nas orações ao pé do altar da missa solene, que inclinações fazem o diácono e o subdiácono ao <em>Misereatur</em> e ao <em>Confiteor</em> do celebrante? E que faz o celebrante durante o seu próprio <em>Confiteor</em>?", a: "" },
+          { n: 86, q: "Descreva o cerimonial da Epístola na missa solene: quem entrega o Epistolário ao subdiácono e como se entrega um livro litúrgico; quando o subdiácono começa a cantar, e o que se segue ao término da Epístola.", a: "" },
+          { n: 87, q: "Como se posicionam o diácono e o subdiácono atrás do celebrante para o Intróito e o Kyrie na missa solene? Como se recita o Kyrie?", a: "" }
+        ]
+      },
+      {
+        title: "XII. Bênção do Santíssimo Sacramento",
+        range: "Questões 88–90",
+        items: [
+          { n: 88, q: "Quais são os ministros da Bênção do Santíssimo e com que paramentos se veste o oficiante?", a: "" },
+          { n: 89, q: "Que particularidades tem a imposição de incenso na Bênção do Santíssimo, em comparação com a da missa? Como se faz a incensação do Santíssimo?", a: "" },
+          { n: 90, q: "No <em>Tantum ergo</em>, que reverência se faz às palavras <em>Veneremur cernui</em>, e o que se segue (segunda imposição, versículo, véu umeral)?", a: "" }
+        ]
+      }
+    ];
+
+    (function () {
+      var root = document.getElementById("quiz-root");
+      if (!root) return;
+
+      QUIZ.forEach(function (sec) {
+        var section = document.createElement("section");
+        section.className = "qsection";
+
+        var head = document.createElement("button");
+        head.type = "button";
+        head.className = "qsection-head";
+        head.innerHTML =
+          '<span class="qsection-chevron" aria-hidden="true">&rsaquo;</span>' +
+          '<span class="qsection-title">' + sec.title + "</span>" +
+          '<span class="qsection-count">' + sec.range + "</span>";
+        head.addEventListener("click", function () {
+          section.classList.toggle("open");
+        });
+
+        var body = document.createElement("div");
+        body.className = "qsection-body";
+
+        sec.items.forEach(function (item) {
+          var q = document.createElement("div");
+          q.className = "q";
+
+          var qHead = document.createElement("button");
+          qHead.type = "button";
+          qHead.className = "q-head";
+          qHead.innerHTML =
+            '<span class="q-num">' + item.n + "</span>" +
+            '<span class="q-text">' + item.q + "</span>" +
+            '<span class="q-chevron" aria-hidden="true">&rsaquo;</span>';
+          qHead.addEventListener("click", function () {
+            q.classList.toggle("open");
+          });
+
+          var qBody = document.createElement("div");
+          qBody.className = "q-body";
+          qBody.innerHTML = item.a
+            ? '<div class="q-answer">' + item.a + "</div>"
+            : '<p class="q-empty">Resposta em breve.</p>';
+
+          q.appendChild(qHead);
+          q.appendChild(qBody);
+          body.appendChild(q);
+        });
+
+        section.appendChild(head);
+        section.appendChild(body);
+        root.appendChild(section);
+      });
+
+      var sections = root.querySelectorAll(".qsection");
+      var questions = root.querySelectorAll(".q");
+      var modeButtons = document.querySelectorAll(".quiz-mode-btn");
+
+      function apply(mode) {
+        if (mode === "all") {
+          sections.forEach(function (s) { s.classList.add("open"); });
+          questions.forEach(function (q) { q.classList.add("open"); });
+        } else if (mode === "hide") {
+          sections.forEach(function (s) { s.classList.add("open"); });
+          questions.forEach(function (q) { q.classList.remove("open"); });
+        } else if (mode === "sections") {
+          sections.forEach(function (s) { s.classList.remove("open"); });
+          questions.forEach(function (q) { q.classList.remove("open"); });
+        }
+        modeButtons.forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-mode") === mode);
+        });
+      }
+
+      modeButtons.forEach(function (b) {
+        b.addEventListener("click", function () {
+          apply(b.getAttribute("data-mode"));
+        });
+      });
+
+      // Modo padrao: Mostrar tudo.
+      apply("all");
+    })();
+  </script>
+</body>
+</html>

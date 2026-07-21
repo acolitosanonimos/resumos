@@ -12,11 +12,11 @@
       title: "Missa Cantada",
       items: [
         { label: "Acólito 2", href: "acolito-2-missa-cantada.html" },
-        { label: "Acólito 1" },
+        { label: "Acólito 1", href: "acolito-1-missa-cantada.html", blocked: true },
         { label: "Cruciferário", href: "cruciferario.html" },
         { label: "Tocheiro", href: "tocheiro.html" },
-        { label: "Turiferário" },
-        { label: "Mc" }
+        { label: "Turiferário", href: "turiferario-missa-cantada.html", blocked: true },
+        { label: "Mc", href: "mc-missa-cantada.html", blocked: true }
       ]
     },
     {
@@ -30,11 +30,12 @@
     {
       title: "Missa Solene",
       items: [
-        { label: "Celebrante", href: "missa-solene-celebrante.html" },
-        { label: "Diácono", href: "missa-solene-diacono.html" },
-        { label: "Subdiácono", href: "missa-solene-subdiacono.html" },
+        { label: "Acólito 1 e 2", href: "missa-solene-acolitos.html", blocked: true },
+        { label: "Turiferário", href: "missa-solene-turiferario.html", blocked: true },
         { label: "Mc", href: "missa-solene-mc.html" },
-        { label: "Acólitos e Tf" }
+        { label: "Subdiácono", href: "missa-solene-subdiacono.html" },
+        { label: "Diácono", href: "missa-solene-diacono.html" },
+        { label: "Celebrante", href: "missa-solene-celebrante.html" }
       ]
     }
   ];
@@ -50,7 +51,7 @@
 
     function renderItem(item) {
       var classes = ["nav-button"];
-      if (!item.href) {
+      if (!item.href || item.blocked) {
         classes.push("disabled");
         return '<span class="' + classes.join(" ") + '" aria-disabled="true" title="Em breve">' + item.label + "</span>";
       }
@@ -75,6 +76,73 @@
         "</a>" +
         '<span class="nav-spacer" aria-hidden="true"></span>' +
       "</div>";
+
+    // Ordered sequence of navigable resumos (items with href), in NAV_GROUPS
+    // order. The home is step 0, so the first resumo is step 1.
+    var order = [];
+    NAV_GROUPS.forEach(function (group) {
+      group.items.forEach(function (item) {
+        if (item.href) order.push(item);
+      });
+    });
+
+    var isHome = !inPages && (currentFile === "index.html" || currentFile === "");
+    var seqIdx = -1; // position in the sequence, or -1 if outside it
+    if (isHome) {
+      seqIdx = 0;
+    } else {
+      for (var i = 0; i < order.length; i++) {
+        if (order[i].href === currentFile) { seqIdx = i + 1; break; }
+      }
+    }
+
+    buildProgressDot();
+    buildPageNav();
+
+    // Progress dot sliding along the header's bottom red bar: far left on the
+    // home (step 0), advancing one notch per resumo up to the last one.
+    function buildProgressDot() {
+      if (seqIdx === -1) return;
+      var frac = seqIdx / order.length;
+      var dot = document.createElement("span");
+      dot.className = "nav-progress-dot";
+      dot.setAttribute("aria-hidden", "true");
+      dot.style.left = "calc((100% - 14px) * " + frac + ")";
+      root.appendChild(dot);
+    }
+
+    // Prev/next strip: two small buttons at the top of a resumo page (including
+    // the "Em breve" empty pages). The home has no page-card, so it is skipped.
+    function buildPageNav() {
+      var card = document.querySelector("main.content-shell > .page-card");
+      if (!card) return;
+
+      var idx = seqIdx - 1; // back to the index inside `order`
+      if (idx < 0 || idx >= order.length || order[idx].href !== currentFile) return;
+
+      var prev = idx > 0 ? order[idx - 1] : null;
+      var next = idx < order.length - 1 ? order[idx + 1] : null;
+
+      function slot(item, dir) {
+        var arrow = dir === "prev"
+          ? '<span class="page-nav-arrow" aria-hidden="true">&larr;</span>'
+          : '<span class="page-nav-arrow" aria-hidden="true">&rarr;</span>';
+        var text = dir === "prev" ? "Resumo anterior" : "Próximo resumo";
+        var label = dir === "prev"
+          ? arrow + '<span class="page-nav-text">' + text + "</span>"
+          : '<span class="page-nav-text">' + text + "</span>" + arrow;
+        if (!item) {
+          return '<span class="menu-button page-nav-btn ' + dir + ' disabled" aria-disabled="true">' + label + "</span>";
+        }
+        return '<a class="menu-button page-nav-btn ' + dir + '" href="' + base + item.href + '" title="' + item.label + '">' + label + "</a>";
+      }
+
+      var nav = document.createElement("nav");
+      nav.className = "page-nav";
+      nav.setAttribute("aria-label", "Navegação entre resumos");
+      nav.innerHTML = slot(prev, "prev") + slot(next, "next");
+      card.parentNode.insertBefore(nav, card);
+    }
 
     // Rendered outside #site-header: the header's backdrop-filter creates a
     // new containing block, which would clip fixed-position descendants to
