@@ -161,7 +161,6 @@
       var row = document.createElement("div");
       row.className = "nav-procession";
       row.setAttribute("aria-hidden", "true");
-      row.style.right = "calc(100% - (100% - 14px) * " + frac + " - 7px)";
       row.innerHTML = set.map(function (slug, i) {
         var d = WALKER_DIMS[slug];
         // --ph: fase (quadro inicial/final) por figura, para a passada nunca
@@ -172,6 +171,17 @@
           "; --ph:" + ph + "; --img:url('" + assetBase + slug + ".png')\"></span>";
       }).join("");
       root.appendChild(row);
+
+      // Borda direita da fila sob a bolinha, mas ancorada por `left` em px e
+      // travada na margem para não transbordar pela esquerda nas páginas
+      // iniciais (onde a bolinha fica junto do canto esquerdo). Recalcula no resize.
+      var place = function () {
+        var rootW = root.getBoundingClientRect().width;
+        var dotCenter = frac * (rootW - 14) + 7;
+        row.style.left = Math.max(4, dotCenter - row.offsetWidth) + "px";
+      };
+      place();
+      window.addEventListener("resize", place);
 
       // Some ao rolar; reaparece no topo.
       var onScroll = function () {
