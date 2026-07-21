@@ -40,6 +40,31 @@
     }
   ];
 
+  // Tira de sprites por personagem (largura x altura de um quadro, em px).
+  var WALKER_DIMS = {
+    padre: [178, 199],
+    acolito: [162, 198],
+    vela: [142, 223],
+    cruz: [136, 229],
+    turiferario: [209, 199]
+  };
+
+  // Marcas da procissão: páginas onde a composição muda. Fora delas, cada
+  // página herda a marca anterior na sequência (carry-forward). A última
+  // figura (mais à direita) fica sob a bolinha do progresso.
+  var WALKER_MARKS = {
+    home: ["acolito"],
+    "acolito-1-missa-rezada.html": ["acolito", "acolito"],
+    "acolito-2-missa-cantada.html": ["vela", "cruz", "turiferario"],
+    "tocheiro.html": ["vela", "vela", "cruz", "turiferario"],
+    // "A decorar" volta à composição da Missa Cantada (não herda o Tocheiro).
+    "oracoes-a-decorar.html": ["vela", "cruz", "turiferario"],
+    "oracao-arquiconfraria.html": ["vela", "cruz", "turiferario"],
+    "regras-recomendacoes.html": ["vela", "cruz", "turiferario"],
+    "missa-solene-acolitos.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-subdiacono.html": ["padre", "acolito", "vela", "vela", "cruz", "turiferario"]
+  };
+
   function init() {
     var root = document.getElementById("site-header");
     if (!root) return;
@@ -97,6 +122,7 @@
     }
 
     buildProgressDot();
+    buildProcession();
     buildPageNav();
 
     // Progress dot sliding along the header's bottom red bar: far left on the
@@ -109,6 +135,50 @@
       dot.setAttribute("aria-hidden", "true");
       dot.style.left = "calc((100% - 14px) * " + frac + ")";
       root.appendChild(dot);
+    }
+
+    // Procissão pendurada logo abaixo da barra vermelha. A figura mais à
+    // direita fica sob a bolinha; as demais se estendem para a esquerda.
+    // A composição é a da marca mais recente na sequência (carry-forward).
+    function buildProcession() {
+      if (seqIdx === -1) return;
+
+      var marks = [{ pos: 0, set: WALKER_MARKS.home }];
+      order.forEach(function (item, i) {
+        if (WALKER_MARKS[item.href]) marks.push({ pos: i + 1, set: WALKER_MARKS[item.href] });
+      });
+      marks.sort(function (a, b) { return a.pos - b.pos; });
+
+      var set = null;
+      for (var j = 0; j < marks.length; j++) {
+        if (marks[j].pos <= seqIdx) set = marks[j].set; else break;
+      }
+      if (!set || !set.length) return;
+
+      var assetBase = inPages ? "../assets/procissao/" : "assets/procissao/";
+      var frac = seqIdx / order.length;
+
+      var row = document.createElement("div");
+      row.className = "nav-procession";
+      row.setAttribute("aria-hidden", "true");
+      row.style.right = "calc(100% - (100% - 14px) * " + frac + " - 7px)";
+      row.innerHTML = set.map(function (slug, i) {
+        var d = WALKER_DIMS[slug];
+        // --ph: fase (quadro inicial/final) por figura, para a passada nunca
+        // ficar em sincronia — inclusive entre as duas velas, que congelam em
+        // quadros diferentes ao fim dos 7s.
+        var ph = (i * 3) % 8;
+        return '<span class="walker" style="--fw:' + d[0] + '; --fh:' + d[1] +
+          "; --ph:" + ph + "; --img:url('" + assetBase + slug + ".png')\"></span>";
+      }).join("");
+      root.appendChild(row);
+
+      // Some ao rolar; reaparece no topo.
+      var onScroll = function () {
+        row.classList.toggle("is-hidden", (window.pageYOffset || document.documentElement.scrollTop) > 8);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
     }
 
     // Prev/next strip: two small buttons at the top of a resumo page (including
