@@ -457,8 +457,8 @@ body.nav-open {
 
 .hero-logo {
   flex: none;
-  width: clamp(56px, 11vw, 130px);
-  height: clamp(56px, 11vw, 130px);
+  width: clamp(96px, 18vw, 220px);
+  height: clamp(96px, 18vw, 220px);
   border-radius: 50%;
   transform-style: preserve-3d;
   transform-origin: center;
@@ -1277,8 +1277,8 @@ h1 {
   }
 
   .hero-logo {
-    width: 52px;
-    height: 52px;
+    width: 84px;
+    height: 84px;
   }
 
   .hero-logo-button {
