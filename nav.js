@@ -167,8 +167,11 @@
         // ficar em sincronia — inclusive entre as duas velas, que congelam em
         // quadros diferentes ao fim dos 7s.
         var ph = (i * 3) % 8;
+        // background-image inline (não via custom property): um url() relativo
+        // dentro de var() é resolvido em relação ao styles.css, não à página,
+        // o que quebra o caminho nas subpáginas. Inline resolve pela página.
         return '<span class="walker" style="--fw:' + d[0] + '; --fh:' + d[1] +
-          "; --ph:" + ph + "; --img:url('" + assetBase + slug + ".png')\"></span>";
+          "; --ph:" + ph + "; background-image:url('" + assetBase + slug + ".png')\"></span>";
       }).join("");
       root.appendChild(row);
 

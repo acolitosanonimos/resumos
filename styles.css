@@ -54,7 +54,7 @@ body {
   transition: left 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
   pointer-events: none;
   z-index: 19;
-  --wscale: 0.2;
+  --wscale: 0.34;
 }
 .nav-procession.is-hidden { opacity: 0; }
 .nav-procession .walker {
@@ -63,7 +63,6 @@ body {
   flex: none;
   width: calc(var(--fw) * var(--wscale) * 1px);
   height: calc(var(--fh) * var(--wscale) * 1px);
-  background-image: var(--img);
   background-repeat: repeat-x;
   background-position-x: calc(var(--fw) * var(--wscale) * var(--ph) * -1px);
   background-size: calc(var(--fw) * var(--frames) * var(--wscale) * 1px) 100%;
