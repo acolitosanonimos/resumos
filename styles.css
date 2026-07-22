@@ -1381,7 +1381,7 @@ h1 {
     justify-content: center;
     gap: 12px;
     /* Mobile: desce o logo AA e o titulo "Resumos" sem deslocar outros elementos */
-    transform: translateY(32px);
+    transform: translateY(44px);
   }
 
   .hero-logo {
@@ -1404,10 +1404,8 @@ h1 {
   }
 
   .hero-copy {
-    margin-top: 14px;
-    text-align: center;
-    font-size: 0.9rem;
-    line-height: 1.35;
+    /* Mobile: esconde a frase "Resumos simples e diretos." (residuo) */
+    display: none;
   }
 
   .home-menu {
