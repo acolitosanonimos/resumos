@@ -57,10 +57,8 @@
     "acolito-1-missa-rezada.html": ["acolito", "acolito"],
     "acolito-2-missa-cantada.html": ["vela", "cruz", "turiferario"],
     "tocheiro.html": ["vela", "vela", "cruz", "turiferario"],
-    // "A decorar" volta à composição da Missa Cantada (não herda o Tocheiro).
-    "oracoes-a-decorar.html": ["vela", "cruz", "turiferario"],
-    "oracao-arquiconfraria.html": ["vela", "cruz", "turiferario"],
-    "regras-recomendacoes.html": ["vela", "cruz", "turiferario"],
+    // O grupo "A decorar" não tem marca própria: herda o Tocheiro por
+    // carry-forward, ficando igual ao Mc da Missa Cantada.
     "missa-solene-acolitos.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
     "missa-solene-subdiacono.html": ["padre", "acolito", "vela", "vela", "cruz", "turiferario"]
   };
