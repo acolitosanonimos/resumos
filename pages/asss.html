@@ -142,6 +142,8 @@
     .q-text {
       flex: 1;
       line-height: 1.5;
+      font-weight: 700;
+      color: #000000;
     }
 
     .q-body {
@@ -168,6 +170,60 @@
       line-height: 1.6;
     }
 
+    /* --- Formatação das respostas --- */
+    .q-answer p { margin: 0 0 10px; }
+    .q-answer p:last-child { margin-bottom: 0; }
+    .q-answer ul,
+    .q-answer ol { margin: 0 0 10px; padding-left: 22px; }
+    .q-answer li { margin: 0 0 5px; }
+    .q-answer li:last-child { margin-bottom: 0; }
+    .q-answer strong { color: var(--red-dark); }
+    .q-answer em { font-style: italic; }
+    .q-answer .cite { color: var(--muted); font-weight: 600; font-size: 0.9em; }
+
+    .q-answer .ans-table-wrap { overflow-x: auto; margin: 0 0 12px; }
+    .q-answer table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.94rem;
+    }
+    .q-answer th,
+    .q-answer td {
+      border: 1px solid var(--line);
+      padding: 7px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .q-answer thead th {
+      background: #f8f8f7;
+      color: var(--red-dark);
+      font-weight: 750;
+    }
+
+    .q-answer .ans-note {
+      margin: 12px 0 10px;
+      padding: 10px 12px;
+      border-left: 3px solid var(--red);
+      background: #fff5f5;
+      border-radius: 4px;
+      font-size: 0.92rem;
+      color: #5c1a1a;
+    }
+    .q-answer .ans-note p { margin: 0 0 6px; }
+    .q-answer .ans-note p:last-child { margin-bottom: 0; }
+    .q-answer .ans-note strong { color: var(--red-dark); }
+
+    .q-answer .ans-gap {
+      margin: 4px 0 6px;
+      padding: 14px 16px;
+      border: 1px dashed rgba(185, 28, 28, 0.45);
+      border-radius: 8px;
+      background: rgba(185, 28, 28, 0.05);
+    }
+    .q-answer .ans-gap p { margin: 0 0 6px; }
+    .q-answer .ans-gap p:last-child { margin-bottom: 0; }
+    .q-answer .ans-gap .ans-gap-title { font-weight: 800; color: var(--red-dark); }
+
     @media (max-width: 560px) {
       .quiz-controls { padding: 12px 18px; top: 58px; }
       .quiz-root { padding: 4px 18px 24px; }
@@ -183,7 +239,7 @@
       <div class="page-title">
         <p class="kicker">Estudo &middot; Pe. Reus</p>
         <h1>Questionário</h1>
-        <p class="page-copy">As 90 questões, divididas em seções. Clique numa seção ou numa questão para abrir. As respostas serão adicionadas depois.</p>
+        <p class="page-copy">As 90 questões com resposta, do <em>Curso de Liturgia</em> do Pe. Reus. Clique numa questão para ver a resposta; use os botões para abrir ou fechar tudo.</p>
       </div>
 
       <div class="quiz-controls" role="group" aria-label="Modos de exibição">
@@ -202,182 +258,682 @@
 
   <script src="../nav.js"></script>
   <script>
-    // As 90 questoes em 14 secoes (o arquivo-fonte tem 2 "Partes" + 12 secoes
-    // em algarismos romanos). Para adicionar uma resposta, preencha o campo `a`
-    // da questao com HTML (ex.: a: "<p>Resposta...</p>"); vazio mostra o aviso.
+    // As 90 questoes em 14 secoes. Cada questao tem q (pergunta) e a (resposta em
+    // HTML). As respostas vem do Curso de Liturgia do Pe. Reus; a citacao (§ X, n. Y)
+    // indica o paragrafo da fonte. Campo `a` vazio mostra "Resposta em breve.".
     var QUIZ = [
       {
         title: "Parte I — Liturgia",
         range: "Questões 1–10",
         items: [
-          { n: 1, q: "Exponha a definição nominal de \"Liturgia\": indique a etimologia da palavra e os quatro significados que ela teve (na antiguidade profana, no Novo Testamento e no uso eclesiástico).", a: "" },
-          { n: 2, q: "Distinga com precisão os termos rito, cerimônia e rubrica. Por que as rubricas têm esse nome, e como se dividem?", a: "" },
-          { n: 3, q: "Explique a distinção entre rubricas preceptivas e diretivas. Que qualificação têm, p. ex., as rubricas que regulam o que se deve fazer antes e depois da missa?", a: "" },
-          { n: 4, q: "Exponha as regras das conclusões das orações litúrgicas: quando se diz <em>Per Dominum</em>, <em>Qui vivis</em>, <em>Per eundem</em>, <em>Qui tecum</em> e <em>in unitate eiusdem Spiritus Sancti</em>?", a: "" },
-          { n: 5, q: "Descreva como se faz a genuflexão simples e indique as regras práticas: onde genuflectem os paramentados, quem a faz com as mãos sobre o altar, e que se saúda com genuflexão simples?", a: "" },
-          { n: 6, q: "Quais as três espécies de altares quanto à estabilidade? Indique os requisitos do altar fixo e a definição da pedra de ara.", a: "" },
-          { n: 7, q: "Quais são as cores litúrgicas estabelecidas por São Pio V para a Igreja universal e desde quando o cânon das cores está essencialmente fixo? Em que dias se admite a cor rosa?", a: "" },
-          { n: 8, q: "Qual a regra que determina o início do advento?", a: "" },
-          { n: 9, q: "Explique as regras relativas à recitação do Credo na missa (i.e., quando o Credo ocorre).", a: "" },
-          { n: 10, q: "Que deve fazer o celebrante se o cálice cair depois da consagração? E se for impossível recolher quantidade suficiente do Preciosíssimo Sangue?", a: "" }
+          { n: 1, q: "Exponha a definição nominal de \"Liturgia\": indique a etimologia da palavra e os quatro significados que ela teve (na antiguidade profana, no Novo Testamento e no uso eclesiástico).", a: `
+            <p><strong>Etimologia:</strong> do grego <em>leiton</em> (= do povo) + <em>érgon</em> (= a obra, o ministério). Significa um ministério exercido em nome ou em favor da comunidade. <span class="cite">(§ 1, n. 2)</span></p>
+            <p><strong>Os quatro significados históricos:</strong></p>
+            <ol>
+              <li><strong>Antiguidade profana</strong> — função pública, não remunerada, em favor da comunidade (juiz, festeiro de jogos, diretor de teatro, armador de navio, operário público).</li>
+              <li><strong>Novo Testamento</strong> — encargo público, ainda profano, na comunidade religiosa (o cuidado dos pobres em Corinto, 2 Cor 9, 12).</li>
+              <li><strong>Uso eclesiástico</strong> — função pública sacra da Igreja: a pregação, as orações dos clérigos e, principalmente, o sacrifício (o próprio Cristo é chamado <em>leitourgos</em>, Heb 8, 2).</li>
+              <li><strong>O sacrifício do Novo Testamento</strong> — a própria <strong>missa</strong> (já assim nas Constituições Apostólicas, c. 380).</li>
+            </ol>
+            <div class="ans-note"><p><strong>Definição essencial</strong> <span class="cite">(§ 1, n. 3)</span>: <em>Liturgia é o culto da Igreja</em> — culto exterior, público e oficial.</p></div>` },
+          { n: 2, q: "Distinga com precisão os termos rito, cerimônia e rubrica. Por que as rubricas têm esse nome, e como se dividem?", a: `
+            <ul>
+              <li><strong>Rito</strong> (de <em>ritus</em> = modo costumado) — a <strong>forma exterior</strong> dos atos litúrgicos: a liturgia total de uma igreja (rito romano), uma função inteira (rito de enterro) ou uma função particular (rito da incensação). <span class="cite">(§ 8, n. 27)</span></li>
+              <li><strong>Cerimônia</strong> — de origem incerta (ligada à cidade de <em>Cære</em>). Designa as <strong>ações acidentais e secundárias</strong> que acompanham o rito. O rito são as partes principais (fórmulas e orações); a cerimônia, as observâncias secundárias. <span class="cite">(§ 8, n. 28)</span></li>
+              <li><strong>Rubrica</strong> — as <strong>leis litúrgicas</strong> que regem ritos e cerimônias. <span class="cite">(§ 8, n. 29)</span></li>
+            </ul>
+            <p><strong>Por que "rubricas":</strong> vem da <strong>tinta rubra (vermelha)</strong> com que eram escritas; mesmo impressas depois em preto, conservaram o nome. <span class="cite">(§ 8, n. 29)</span></p>
+            <p><strong>Divisão:</strong> <strong>gerais</strong> (comuns a muitas cerimônias) e <strong>especiais</strong> (próprias de uma só). <span class="cite">(§ 8, n. 29)</span></p>` },
+          { n: 3, q: "Explique a distinção entre rubricas preceptivas e diretivas. Que qualificação têm, p. ex., as rubricas que regulam o que se deve fazer antes e depois da missa?", a: `
+            <ul>
+              <li><strong>Preceptivas</strong> — obrigam sob pecado; infringi-las é falta moral.</li>
+              <li><strong>Diretivas</strong> — apenas orientam; <strong>infringi-las não é propriamente pecado</strong>, mas é menos conveniente, salvo razão justa. <span class="cite">(§ 19, n. 75)</span></li>
+            </ul>
+            <p>As rubricas do <strong>que se faz antes e depois da missa</strong> são consideradas, segundo Lehmkuhl, <strong>apenas diretivas</strong> (não preceptivas). Do mesmo modo, as rubricas <em>de defectibus</em> são chamadas diretivas. <span class="cite">(§ 19, n. 75)</span></p>` },
+          { n: 4, q: "Exponha as regras das conclusões das orações litúrgicas: quando se diz <em>Per Dominum</em>, <em>Qui vivis</em>, <em>Per eundem</em>, <em>Qui tecum</em> e <em>in unitate eiusdem Spiritus Sancti</em>?", a: `
+            <p>A oração tem três partes — invocação (<em>Deus</em>), motivo (<em>qui…</em>) e petição (<em>præsta</em>) — e dirige-se em geral a Deus Padre. A conclusão pode ser longa ou breve. <span class="cite">(§ 25, n. 87–88)</span></p>
+            <div class="ans-table-wrap"><table>
+              <thead><tr><th>Conclusão</th><th>Quando se usa</th></tr></thead>
+              <tbody>
+                <tr><td><em>Per Dominum</em> nostrum…</td><td>Oração ao <strong>Padre</strong>, sem menção do Filho no corpo.</td></tr>
+                <tr><td><em>Qui vivis</em> et regnas…</td><td>Oração dirigida ao próprio <strong>Filho</strong>.</td></tr>
+                <tr><td><em>Per eundem</em> Dominum…</td><td>Oração ao Padre, mas o <strong>Filho já foi nomeado</strong> no corpo da oração.</td></tr>
+                <tr><td><em>Qui tecum</em> vivit…</td><td>Oração ao Padre, mas o <strong>Filho é nomeado no fim</strong>, logo antes da conclusão.</td></tr>
+                <tr><td><em>in unitate eiusdem Spiritus Sancti</em></td><td>Acrescenta-se quando o <strong>Espírito Santo</strong> é mencionado como Pessoa.</td></tr>
+              </tbody>
+            </table></div>
+            <p>A conclusão breve (<em>Per Christum Dominum nostrum</em>; <em>Qui vivis et regnas in sæcula sæculorum</em>) usa-se em geral fora da missa e do ofício. Na missa, reza-se depois da primeira e da última oração. <span class="cite">(§ 25, n. 88)</span></p>` },
+          { n: 5, q: "Descreva como se faz a genuflexão simples e indique as regras práticas: onde genuflectem os paramentados, quem a faz com as mãos sobre o altar, e que se saúda com genuflexão simples?", a: `
+            <p><strong>Como se faz</strong> <span class="cite">(§ 32, n. 108)</span>: dobra-se o <strong>joelho direito</strong> até tocar o chão próximo ao calcanhar esquerdo, <strong>sem</strong> inclinar cabeça ou corpo e sem demora (salvo quando prescrita ao pronunciar muitas palavras, p. ex. <em>Et incarnatus est</em>, aí devagar).</p>
+            <p><strong>Regras práticas:</strong></p>
+            <ul>
+              <li><strong>Paramentados</strong> genuflectem <strong>sobre os degraus</strong> — exceto à chegada e à retirada do coro; os ministros inferiores dobram o joelho <strong>até o chão</strong>.</li>
+              <li><strong>Só o celebrante</strong> genuflecte pondo as <strong>mãos sobre o altar</strong>, e sempre assim.</li>
+              <li>Saúda-se com genuflexão simples a <strong>cruz do altar</strong> nas funções litúrgicas (e a cruz da procissão na absolvição dos defuntos, exceto celebrante, bispo e cônego).</li>
+              <li>Nunca se dobra um só joelho quando não se tem de levantar logo.</li>
+            </ul>
+            <p class="cite">(§ 32, n. 108)</p>` },
+          { n: 6, q: "Quais as três espécies de altares quanto à estabilidade? Indique os requisitos do altar fixo e a definição da pedra de ara.", a: `
+            <p><strong>Três espécies quanto à estabilidade</strong> <span class="cite">(§ 49, n. 158–160)</span>:</p>
+            <ol>
+              <li><strong>Altar fixo</strong> — <strong>sagrado pelo bispo</strong>, feito de <strong>mesa de pedra inteiriça</strong> unida a base também de pedra, aderente ao pavimento ou parede; as colunas de sustentação de <strong>pedra natural</strong>; dedicado a um mistério ou a um santo.</li>
+              <li><strong>Altar quase-fixo</strong> — semelhante ao fixo, mas de outra matéria, com uma <strong>pedra de ara</strong> embutida; liturgicamente vale como portátil.</li>
+              <li><strong>Altar portátil (pedra de ara)</strong> — veja abaixo.</li>
+            </ol>
+            <p><strong>Pedra de ara</strong> <span class="cite">(§ 49, n. 160)</span>: o altar portátil (<em>petra sacra, ara</em>) — uma <strong>pedra natural, inteiriça, grande o bastante para nela caberem a hóstia e o cálice</strong>.</p>` },
+          { n: 7, q: "Quais são as cores litúrgicas estabelecidas por São Pio V para a Igreja universal e desde quando o cânon das cores está essencialmente fixo? Em que dias se admite a cor rosa?", a: `
+            <p><strong>O cânon das cores</strong> está <strong>essencialmente fixo desde o século XII</strong>. Pio V suprimiu as cores secundárias e estabeleceu, para a Igreja universal, as <strong>cinco cores primárias</strong> <span class="cite">(§ 54, n. 207)</span>:</p>
+            <ul>
+              <li><strong>Branco</strong>, <strong>Vermelho</strong>, <strong>Verde</strong>, <strong>Roxo</strong> e <strong>Preto</strong>.</li>
+            </ul>
+            <p><strong>A cor rosa</strong> admite-se em <strong>dois dias</strong>: no domingo <em>Gaudete</em> (3.º do Advento) e no domingo <em>Lætare</em> (4.º da Quaresma). <span class="cite">(§ 54, n. 207)</span></p>` },
+          { n: 8, q: "Qual a regra que determina o início do advento?", a: `
+            <p>O <strong>primeiro domingo do Advento</strong> é aquele que está <strong>mais chegado à festa de Santo André (30 de novembro)</strong> — isto é, o domingo que cai entre <strong>27 de novembro e 3 de dezembro</strong> (inclusive). <span class="cite">(§ 96, n. 454)</span></p>` },
+          { n: 9, q: "Explique as regras relativas à recitação do Credo na missa (i.e., quando o Credo ocorre).", a: `
+            <p>Reza-se o Credo nas festas <em>de que se faz alguma menção do símbolo</em> <span class="cite">(§ 102, n. 487)</span>:</p>
+            <ul>
+              <li>domingos; festas do Senhor e de Maria SS.; dos santos anjos; dos apóstolos; dos doutores que aprofundaram a fé; dos padroeiros principais da igreja; dedicação das igrejas; de Santa Maria Madalena; de São José.</li>
+            </ul>
+            <p><strong>Não</strong> se reza na festa de <strong>São João Batista</strong>. Os motivos resumem-se em três palavras: <em>mysterium, doctrina, celebritas</em>. <span class="cite">(§ 102, n. 487)</span></p>` },
+          { n: 10, q: "Que deve fazer o celebrante se o cálice cair depois da consagração? E se for impossível recolher quantidade suficiente do Preciosíssimo Sangue?", a: `
+            <p><strong>Se o cálice cair depois da consagração</strong> <span class="cite">(§ De defectibus, n. 548)</span>:</p>
+            <ol>
+              <li>Recolher com a <strong>patena</strong> quanto puder do Preciosíssimo Sangue.</li>
+              <li>Se recolher <strong>quantidade suficiente para beber</strong>: continua a missa e depois <strong>lava três vezes</strong> as partes molhadas das toalhas e do altar; a água da ablução vai ao sacrário.</li>
+            </ol>
+            <p><strong>Se for impossível recolher a matéria necessária</strong> <span class="cite">(n. 550)</span>: procede-se como no caso do vinho defeituoso — <strong>consagra de novo</strong>, tomando nova matéria e recomeçando pelas palavras da consagração (<em>Qui pridie</em> / <em>Simili modo</em>), omitindo as reverências.</p>
+            <div class="ans-note"><p>Essa nova consagração está prescrita <strong>sob pecado grave</strong>, pois a dupla consagração pertence, por preceito divino, ao rito essencial do sacrifício.</p></div>` }
         ]
       },
       {
         title: "Parte II — Cerimonial",
         range: "Questões 11–20",
         items: [
-          { n: 11, q: "Descreva como se faz a genuflexão dupla, e dê um exemplo do uso dela.", a: "" },
-          { n: 12, q: "Enumere os tipos de inclinação do corpo e da cabeça, explicando como se faz cada uma e dando um exemplo de uso.", a: "" },
-          { n: 13, q: "Exponha as regras das genuflexões dos ministros maiores na missa solene: quais se fazem <em>in plano</em> e quais <em>in gradu</em>, e quando se genuflete estando ou não o Santíssimo sobre o altar.", a: "" },
-          { n: 14, q: "Descreva o rito do Lavabo na missa rezada: o que o acólito prepara, qual a deixa para subir, e como procede.", a: "" },
-          { n: 15, q: "Indique todos os toques de campainha do servidor na missa rezada, do <em>Sanctus</em> ao <em>Domine non sum dignus</em>, com o número de toques em cada momento.", a: "" },
-          { n: 16, q: "Qual é a função do mestre de cerimônias, que sinais convencionais usa para dirigir o coro e os ministros, e como deve proceder diante de um erro de menor importância?", a: "" },
-          { n: 17, q: "Distinga o <em>ductus</em> (movimento) simples e o duplo na incensação. De que nível se incensa o Santíssimo Sacramento? Quantos movimentos recebe o celebrante e com que reverências?", a: "" },
-          { n: 18, q: "Indique a ordem hierárquica completa da incensação feita pelo turiferário depois da incensação do ofertório, na missa solene, com o número de movimentos para cada categoria.", a: "" },
-          { n: 19, q: "Como se organiza a procissão do Evangelho na missa solene e qual a disposição dos ministros no lugar do canto do Evangelho?", a: "" },
-          { n: 20, q: "Como e quantas vezes se toca a campainha durante a bênção com o Santíssimo? Que faz o MC imediatamente depois?", a: "" }
+          { n: 11, q: "Descreva como se faz a genuflexão dupla, e dê um exemplo do uso dela.", a: `
+            <p><strong>Como se faz</strong> <span class="cite">(§ 32, n. 109)</span>: põe-se em terra <strong>primeiro o joelho direito</strong>, depois o <strong>esquerdo</strong>; segue-se <strong>inclinação medíocre do corpo</strong>; por fim, levanta-se.</p>
+            <p><strong>Quando se usa:</strong> diante do <strong>Santíssimo Sacramento exposto</strong> — ao entrar e ao sair do coro; ou ao mudar os paramentos (do meio do altar para a credência). Fora disso, usa-se sempre a simples. <span class="cite">(§ 32, n. 109)</span></p>` },
+          { n: 12, q: "Enumere os tipos de inclinação do corpo e da cabeça, explicando como se faz cada uma e dando um exemplo de uso.", a: `
+            <p><strong>Inclinação do corpo</strong> <span class="cite">(§ 32, n. 111)</span>:</p>
+            <ul>
+              <li><strong>Profunda</strong> — inclinam-se os ombros de modo que as mãos possam tocar os joelhos (ex.: <em>Confiteor</em>, <em>Munda cor</em>).</li>
+              <li><strong>Medíocre (média)</strong> — inclina-se de sorte que, em pé, ainda se veja a ponta dos pés (ex.: ao entregar/receber o turíbulo).</li>
+            </ul>
+            <p><strong>Inclinação da cabeça</strong> — três graus:</p>
+            <div class="ans-table-wrap"><table>
+              <thead><tr><th>Grau</th><th>Quando</th><th>Sentido</th></tr></thead>
+              <tbody>
+                <tr><td>Profunda</td><td>ao nome de <strong>Jesus</strong>, <em>Gloria Patri</em>, <em>Oremus</em></td><td>adoração</td></tr>
+                <tr><td>Média</td><td>ao nome de <strong>Maria</strong></td><td>hiperdulia</td></tr>
+                <tr><td>Mínima</td><td>ao nome de um <strong>santo</strong> ou do <strong>papa reinante</strong></td><td>veneração</td></tr>
+              </tbody>
+            </table></div>
+            <p>Ao nome de Maria e do papa inclina-se em todas as missas; aos outros santos, só na missa ou comemoração deles. <span class="cite">(§ 32, n. 111–112)</span></p>` },
+          { n: 13, q: "Exponha as regras das genuflexões dos ministros maiores na missa solene: quais se fazem <em>in plano</em> e quais <em>in gradu</em>, e quando se genuflete estando ou não o Santíssimo sobre o altar.", a: `
+            <p><strong>In plano × in gradu</strong> <span class="cite">(§ 32, n. 108; § 157, n. 746)</span>:</p>
+            <ul>
+              <li><strong>O celebrante</strong> genuflecte <em>in gradu</em> (sobre os degraus), e é o único a fazê-lo com as mãos sobre o altar.</li>
+              <li><strong>Diácono, subdiácono e MC</strong> genuflectem <strong>sempre <em>in plano</em></strong> (no chão).</li>
+              <li>À <strong>chegada e retirada</strong> do coro, todos genuflectem no plano.</li>
+            </ul>
+            <p><strong>Santíssimo presente ou não</strong> <span class="cite">(§ 156, n. 743)</span>:</p>
+            <ul>
+              <li><strong>Antes da consagração / depois da comunhão</strong> (Santíssimo no sacrário, ou à cruz): genuflete-se ao chegar ao meio vindo de longe, ao passar diante do meio, e ao sair do meio para lugar distante.</li>
+              <li><strong>Depois da consagração / com o SS. exposto</strong>: genuflexão simples ao partir e chegar de um lado a outro, ao subir/descer do supedâneo, e ao chegar/retirar-se do meio.</li>
+            </ul>
+            <div class="ans-note"><p>O subdiácono, quando está atrás do celebrante <strong>segurando a patena</strong>, não genuflecte.</p></div>` },
+          { n: 14, q: "Descreva o rito do Lavabo na missa rezada: o que o acólito prepara, qual a deixa para subir, e como procede.", a: `
+            <p>O celebrante, com as mãos juntas, vai ao <strong>lado da epístola</strong>, vira as palmas para baixo e, começando o <em>Lavabo inter innocentes</em>, lava as extremidades do <strong>polegar e do indicador</strong> de ambas as mãos, enxugando-as com o <strong>manustérgio</strong>. É proibido o lavabo grande nas missas não pontificais. <span class="cite">(§ 151, n. 699)</span></p>
+            <p>O <strong>acólito</strong> prepara e apresenta as <strong>galhetas</strong> (de vidro, sobre o prato) e o <strong>manustérgio</strong>; a <strong>deixa</strong> é o momento do ofertório em que o celebrante passa ao lado da epístola para lavar as mãos. <span class="cite">(§ 60, n. 244)</span></p>
+            <div class="ans-note"><p><strong>Nota:</strong> o Pe. Reus trata o Lavabo pela ação do <strong>celebrante</strong>; o passo-a-passo do acólito servidor está nos resumos do site.</p></div>` },
+          { n: 15, q: "Indique todos os toques de campainha do servidor na missa rezada, do <em>Sanctus</em> ao <em>Domine non sum dignus</em>, com o número de toques em cada momento.", a: `
+            <p>Os <strong>momentos</strong> vêm do Pe. Reus: toca-se ao <em>Sanctus</em> e à elevação; por costume, também no início da consagração, ao ofertório, ao <em>Domine non sum dignus</em> e à pequena elevação. Não se toca com o Santíssimo exposto. <span class="cite">(§ 52, n. 200)</span></p>
+            <p>O <strong>número de toques</strong> segue o costume da Arquiconfraria (resumo do Acólito 1):</p>
+            <div class="ans-table-wrap"><table>
+              <thead><tr><th>Momento</th><th>Toques</th></tr></thead>
+              <tbody>
+                <tr><td><em>Sanctus</em></td><td>3</td></tr>
+                <tr><td><em>Hanc igitur</em> (imposição das mãos)</td><td>1</td></tr>
+                <tr><td>Consagração — padre ajoelha</td><td>1</td></tr>
+                <tr><td>Consagração — padre levanta (elevação)</td><td>3</td></tr>
+                <tr><td>Consagração — padre ajoelha de novo</td><td>1</td></tr>
+                <tr><td><em>Per ipsum</em> (pequena elevação)</td><td>1</td></tr>
+                <tr><td><em>Domine non sum dignus</em></td><td>1 + 2 + 3</td></tr>
+              </tbody>
+            </table></div>
+            <p>Repete-se 1–3–1 na consagração da hóstia e do cálice.</p>` },
+          { n: 16, q: "Qual é a função do mestre de cerimônias, que sinais convencionais usa para dirigir o coro e os ministros, e como deve proceder diante de um erro de menor importância?", a: `
+            <p><strong>Função</strong> <span class="cite">(§ 163, n. 810)</span>: veste a <strong>sobrepeliz</strong> e <strong>assiste o celebrante e os ministros</strong>, dirigindo a função. Não tem lugar marcado. Prepara os objetos (turíbulo, naveta, tochas; credência; missal no altar).</p>
+            <p><strong>Sinais convencionais:</strong> dá os sinais <strong>por inclinação de cabeça e por acenos modestos</strong>. Observa as regras dos ministros inferiores — por isso <strong>genuflecte sempre no plano</strong>. <span class="cite">(§ 163, n. 810)</span></p>
+            <div class="ans-note"><p><strong>Falta na fonte:</strong> o Pe. Reus <strong>não traz diretamente</strong> como o MC deve proceder diante de um <strong>erro de menor importância</strong>. Esse ponto pertence à praxe cerimonial (dissimular e corrigir com discrição), a completar por outra fonte.</p></div>` },
+          { n: 17, q: "Distinga o <em>ductus</em> (movimento) simples e o duplo na incensação. De que nível se incensa o Santíssimo Sacramento? Quantos movimentos recebe o celebrante e com que reverências?", a: `
+            <p><strong>Como se incensa</strong> <span class="cite">(§ 157, n. 749)</span>: levanta-se o turíbulo até a mão à altura do peito (um <em>ductus</em>) e conduz-se em direção ao objeto, com os <em>ictus</em>.</p>
+            <ul>
+              <li><strong>Ductus duplo</strong> = 1 ductus com <strong>2 ictus</strong>.</li>
+              <li><strong>Ductus simples</strong> = 1 ictus.</li>
+            </ul>
+            <p><strong>Quando</strong> <span class="cite">(§ 157, n. 750)</span>: ductus duplo ao <strong>Santíssimo</strong>, à cruz, imagens, relíquias, evangeliário, e a cada pessoa incensada individualmente; ductus simples quando se incensam várias pessoas juntas, e na incensação do altar.</p>
+            <p><strong>O Santíssimo</strong> incensa-se de <strong>joelhos</strong>, com <strong>três ductos duplos</strong>. O <strong>celebrante</strong> recebe do diácono <strong>três ductos duplos</strong>, com <strong>inclinação medíocre antes e depois</strong>. <span class="cite">(§ 157, n. 748)</span></p>` },
+          { n: 18, q: "Indique a ordem hierárquica completa da incensação feita pelo turiferário depois da incensação do ofertório, na missa solene, com o número de movimentos para cada categoria.", a: `
+            <p>Depois de incensadas as oblatas, a cruz e o altar, segue-se a incensação das pessoas nesta ordem <span class="cite">(§ 157, n. 748, 750)</span>:</p>
+            <ol>
+              <li><strong>Celebrante</strong> — pelo diácono, <strong>3 ductos duplos</strong>.</li>
+              <li><strong>Diácono</strong> — pelo turiferário, <strong>2 ductos duplos</strong>.</li>
+              <li><strong>Mestre de cerimônias</strong> — <strong>1 ducto duplo</strong>.</li>
+              <li><strong>Dois acólitos</strong> — juntos, <strong>1 ducto simples</strong>.</li>
+              <li><strong>Demais clérigos do coro</strong> — juntos, <strong>3 ductos simples</strong> (meio, esquerda, direita).</li>
+              <li><strong>Povo</strong> — diante da entrada do coro, <strong>3 ductos simples</strong>.</li>
+            </ol>
+            <p>Havendo <strong>cônegos</strong>, o diácono incensa-os individualmente, em primeiro lugar, com <strong>2 ductos duplos</strong> cada. <span class="cite">(§ 157, n. 750)</span></p>` },
+          { n: 19, q: "Como se organiza a procissão do Evangelho na missa solene e qual a disposição dos ministros no lugar do canto do Evangelho?", a: `
+            <p><strong>Procissão</strong> <span class="cite">(§ 157, n. 756; § 163, n. 811)</span>: ao sinal do MC, os ministros genuflectem no degrau inferior e vão ao lugar do canto — à frente os <strong>ministros inferiores</strong> (turiferário e acólitos), depois o <strong>diácono à direita do subdiácono</strong>.</p>
+            <p><strong>Disposição no lugar do canto</strong> <span class="cite">(§ 157, n. 756)</span>:</p>
+            <ul>
+              <li>com o <strong>altar à direita</strong> e o <strong>povo à esquerda</strong>;</li>
+              <li>o <strong>subdiácono sustenta o livro</strong>, voltado para o diácono;</li>
+              <li>o <strong>diácono</strong> diz <em>Dominus vobiscum</em>, faz o sinal da cruz sobre o texto, <strong>incensa o livro com três ductos duplos em forma de cruz</strong> e canta;</li>
+              <li>o MC e o turiferário fazem as reverências com ele; o subdiácono e os acólitos ficam imóveis.</li>
+            </ul>
+            <p>No fim, o subdiácono leva o evangeliário <strong>diretamente ao celebrante</strong> para o beijar; depois o diácono incensa o celebrante.</p>` },
+          { n: 20, q: "Como e quantas vezes se toca a campainha durante a bênção com o Santíssimo? Que faz o MC imediatamente depois?", a: `
+            <div class="ans-gap">
+              <p class="ans-gap-title">⬜ EM BRANCO — a responder.</p>
+              <p><em>Resposta ainda não redigida.</em></p>
+            </div>` }
         ]
       },
       {
         title: "I. Noções fundamentais de Liturgia",
         range: "Questões 21–25",
         items: [
-          { n: 21, q: "Qual é o objeto primário da Liturgia sacra? Explique o que é o culto latrêutico e como a Liturgia presta culto explícito às Pessoas divinas.", a: "" },
-          { n: 22, q: "Quem é o primeiro sujeito (liturgo principal) da Liturgia? Fundamente a resposta com o Concílio Tridentino e com a célebre sentença de Santo Agostinho.", a: "" },
-          { n: 23, q: "Quais as duas condições necessárias para que um ato de culto seja litúrgico (público)? Dê ao menos quatro exemplos de atos litúrgicos além da missa.", a: "" },
-          { n: 24, q: "Quais são os três fins das cerimônias, segundo as declarações do Concílio Tridentino e do Papa Sisto V comentadas pelo Pe. Reus? Explique brevemente cada um.", a: "" },
-          { n: 25, q: "Os sinais ou símbolos litúrgicos dividem-se em morais e místicos. Explique a diferença e dê um exemplo de cada.", a: "" }
+          { n: 21, q: "Qual é o objeto primário da Liturgia sacra? Explique o que é o culto latrêutico e como a Liturgia presta culto explícito às Pessoas divinas.", a: `
+            <p>O <strong>objeto primário</strong> da Liturgia é <strong>Deus</strong>; só a Ele compete a adoração e o sacrifício da missa. <span class="cite">(§ 3, n. 6)</span></p>
+            <p><strong>Culto latrêutico</strong> — de <em>latria</em> (= adoração), é o culto de <strong>adoração devido unicamente a Deus</strong>.</p>
+            <p><strong>Culto explícito às Pessoas divinas:</strong></p>
+            <ul>
+              <li><strong>SS. Trindade</strong> — pela doxologia <em>"Glória ao Padre…"</em>;</li>
+              <li><strong>Deus Padre</strong> — a maior parte das orações (<em>Omnipotens sempiterne Deus</em>);</li>
+              <li><strong>Deus Filho</strong> — as festas mais solenes (Natal, Páscoa, Corpo de Deus);</li>
+              <li><strong>Espírito Santo</strong> — invocado no ofertório (<em>Veni sanctificator</em>).</li>
+            </ul>
+            <p class="cite">(§ 3, n. 6)</p>` },
+          { n: 22, q: "Quem é o primeiro sujeito (liturgo principal) da Liturgia? Fundamente a resposta com o Concílio Tridentino e com a célebre sentença de Santo Agostinho.", a: `
+            <p>O <strong>liturgo principal</strong> é <strong>Jesus Cristo</strong> — ministro principal, sacerdote e vítima; seu sacerdócio continua no céu. <span class="cite">(§ 4, n. 9)</span></p>
+            <p><strong>Concílio Tridentino</strong> (sessão 22, c. 1): <em>"É o mesmo que agora se sacrifica pelo ministério dos sacerdotes e que se ofereceu na cruz."</em></p>
+            <p><strong>Santo Agostinho:</strong> <em>"Se Pedro batiza, é Este (Cristo) que batiza; se Paulo batiza, é Este que batiza; se Judas batiza, é Este que batiza."</em></p>
+            <div class="ans-note"><p>Liturgos secundários: o <strong>sacerdote</strong> e, de alguma maneira, <strong>cada fiel</strong>, que não só assiste, mas oferece o sacrifício. <span class="cite">(§ 4, n. 10–11)</span></p></div>` },
+          { n: 23, q: "Quais as duas condições necessárias para que um ato de culto seja litúrgico (público)? Dê ao menos quatro exemplos de atos litúrgicos além da missa.", a: `
+            <p><strong>Duas condições</strong> <span class="cite">(§ 6, n. 23)</span>:</p>
+            <ol>
+              <li><strong>Que se faça em nome da Igreja</strong> — usando as fórmulas prescritas nos livros litúrgicos.</li>
+              <li><strong>Que seja realizado por pessoas legitimamente deputadas</strong> para tais atos.</li>
+            </ol>
+            <p><strong>Exemplos além da missa:</strong> o Ofício Divino; a exposição do Santíssimo; as procissões da Candelária, do Domingo de Ramos, de Corpus Christi e das Rogações; a administração dos sacramentos. <span class="cite">(§ 6, n. 23)</span></p>` },
+          { n: 24, q: "Quais são os três fins das cerimônias, segundo as declarações do Concílio Tridentino e do Papa Sisto V comentadas pelo Pe. Reus? Explique brevemente cada um.", a: `
+            <ol>
+              <li><strong>Estético</strong> — realçar a <strong>majestade</strong> do ato (número de ministros, paramentos). <span class="cite">(§ 9, n. 30)</span></li>
+              <li><strong>Latrêutico</strong> — exprimir a <strong>adoração</strong>, para que o espírito do povo se levante a Deus (genuflexão, inclinação ao nome de Jesus). <span class="cite">(§ 9, n. 31)</span></li>
+              <li><strong>Simbólico</strong> — ter <strong>significação</strong> (mística ou moral), ajudando a compreender verdades por sinais sensíveis. <span class="cite">(§ 9, n. 32)</span></li>
+            </ol>` },
+          { n: 25, q: "Os sinais ou símbolos litúrgicos dividem-se em morais e místicos. Explique a diferença e dê um exemplo de cada.", a: `
+            <ul>
+              <li><strong>Morais</strong> — indicam uma <strong>verdade relativa à moral</strong>. <em>Ex.:</em> as vestes sacras, cuja significação está nas orações de vesti-las.</li>
+              <li><strong>Místicos</strong> — indicam <strong>coisa diversa</strong> da expressa pelo texto ou ação. <em>Ex.:</em> a mistura de água e vinho, que simboliza a união da natureza humana com a divina em Cristo, e do povo com Ele.</li>
+            </ul>
+            <p class="cite">(§ 9, n. 34)</p>` }
         ]
       },
       {
         title: "II. Legislação, livros litúrgicos e rubricas",
         range: "Questões 26–29",
         items: [
-          { n: 26, q: "A quem pertence o direito supremo de legislar sobre a Liturgia e qual a natureza desse direito? Qual o papel da Sagrada Congregação dos Ritos?", a: "" },
-          { n: 27, q: "O costume pode originar leis litúrgicas? Que vale, em particular, para os costumes contrários às rubricas da missa? Cite exemplos de costumes tolerados.", a: "" },
-          { n: 28, q: "Que é a edição típica de um livro litúrgico e que se exige das edições juxtatípicas?", a: "" },
-          { n: 29, q: "Que condições devem preencher os decretos da S. Congregação dos Ritos para terem força obrigatória, e qual a sua autoridade? Como se dividem?", a: "" }
+          { n: 26, q: "A quem pertence o direito supremo de legislar sobre a Liturgia e qual a natureza desse direito? Qual o papel da Sagrada Congregação dos Ritos?", a: `
+            <p>O direito supremo pertence ao <strong>Sumo Pontífice</strong>: <em>"Unicamente à Sé Apostólica compete ordenar a sacra Liturgia e aprovar livros litúrgicos"</em> (Cân. 1257). <span class="cite">(§ 16, n. 68)</span></p>
+            <p><strong>Natureza:</strong> não foi conferido pelos bispos — é <strong>direito divino</strong>, essencial ao supremo poder do papa. Aos bispos cabe executar os decretos.</p>
+            <p><strong>Sagrada Congregação dos Ritos:</strong> instituída para <strong>vigiar os ritos e cerimônias</strong> de toda a Igreja latina. <span class="cite">(§ 16, n. 68)</span></p>` },
+          { n: 27, q: "O costume pode originar leis litúrgicas? Que vale, em particular, para os costumes contrários às rubricas da missa? Cite exemplos de costumes tolerados.", a: `
+            <p><strong>Sim</strong> — leis litúrgicas podem originar-se do <strong>costume legítimo</strong> (contra, <em>præter</em> e <em>secundum legem</em>). <span class="cite">(§ 16, n. 69)</span></p>
+            <p><strong>Na missa:</strong> aplica-se o <strong>cân. 818</strong>, que <strong>reprova</strong> qualquer costume contrário às rubricas — mas há exceções toleradas.</p>
+            <p><strong>Costumes tolerados:</strong></p>
+            <ul>
+              <li>tacitamente: vestir a alva sem sobrepeliz; não ministrar a purificação aos que comungam;</li>
+              <li>expressamente: não acender uma terceira vela à elevação.</li>
+            </ul>
+            <p class="cite">(§ 16, n. 69)</p>` },
+          { n: 28, q: "Que é a edição típica de um livro litúrgico e que se exige das edições juxtatípicas?", a: `
+            <ul>
+              <li><strong>Edição típica</strong> — a <strong>primeira edição</strong>, fiscalizada pela S. C. dos Ritos, fornecida por tipografia autorizada (hoje a Vaticana); serve de <strong>modelo</strong>.</li>
+              <li><strong>Edições juxtatípicas</strong> — precisam apenas da <strong>aprovação do bispo</strong>, dada depois de verificada a <strong>exata conformidade com a típica</strong>.</li>
+            </ul>
+            <p class="cite">(§ 18, n. 74)</p>` },
+          { n: 29, q: "Que condições devem preencher os decretos da S. Congregação dos Ritos para terem força obrigatória, e qual a sua autoridade? Como se dividem?", a: `
+            <p><strong>Condições:</strong> devem ser <strong>autênticos</strong> — assinados pelo prefeito e secretário (ou substituto) e munidos do <strong>selo</strong>. <span class="cite">(§ 20, n. 76)</span></p>
+            <p><strong>Divisão e autoridade:</strong></p>
+            <ul>
+              <li><strong>Decretos gerais</strong> — obrigam toda a Igreja, uma ordem ou um país (<em>Urbis et Orbis</em>, <em>Ubique servari mandavit</em>).</li>
+              <li><strong>Decretos particulares</strong> — concedem uma graça (só à pessoa agraciada) ou tratam de costume/cerimônia (obrigam quem consultou); podem obrigar toda a Igreja <em>per accidens</em>.</li>
+            </ul>
+            <p>Mesmo o decreto particular sem obrigação serve de <strong>norma diretiva</strong> em casos semelhantes. <span class="cite">(§ 20, n. 76)</span></p>` }
         ]
       },
       {
         title: "III. As santas palavras e os santos sinais",
         range: "Questões 30–38",
         items: [
-          { n: 30, q: "Enumere e explique as quatro qualidades que recomendam a língua latina como língua litúrgica.", a: "" },
-          { n: 31, q: "Qual é a estrutura geral das orações (coletas) da Liturgia romana? A quem se dirigem as coletas da missa e por quê?", a: "" },
-          { n: 32, q: "Qual a origem e o significado do Aleluia? Quando e por que é suprimido na Liturgia?", a: "" },
-          { n: 33, q: "Que significa, na Liturgia, a posição de pé? Quando o celebrante e o povo ficam de pé, e qual a regra para os assistentes da missa privada?", a: "" },
-          { n: 34, q: "Quais as significações do ósculo litúrgico? Qual a ordem dos ósculos ao entregar e ao receber um objeto nas funções litúrgicas?", a: "" },
-          { n: 35, q: "Trace a evolução histórica do modo de fazer o sinal da cruz e descreva como se faz hoje o pequeno sinal (persignação) e a grande cruz.", a: "" },
-          { n: 36, q: "Para que usos serve a água na Liturgia? Exponha, segundo o Catecismo Romano, as três razões da mistura de água e vinho na missa.", a: "" },
-          { n: 37, q: "Qual é a matéria válida para a preparação das hóstias? Que matéria seria inválida ou duvidosa?", a: "" },
-          { n: 38, q: "Que determina a legislação litúrgica sobre a luz elétrica no altar e na igreja?", a: "" }
+          { n: 30, q: "Enumere e explique as quatro qualidades que recomendam a língua latina como língua litúrgica.", a: `
+            <p>As <strong>quatro qualidades principais</strong> <span class="cite">(§ 24, n. 82)</span>:</p>
+            <ol>
+              <li><strong>Venerável</strong> — produto de desenvolvimento secular, consagrada pelo uso.</li>
+              <li><strong>Estável e fixa</strong> — expressão fiel da fé, sem as mudanças das traduções.</li>
+              <li><strong>Misteriosa e santa</strong> — para ato tão santo, a língua quotidiana é menos conveniente.</li>
+              <li><strong>Unitiva</strong> — une as igrejas particulares entre si e com Roma.</li>
+            </ol>
+            <p>Reus acrescenta ainda: <strong>civilizadora</strong> e <strong>internacional</strong>. À objeção "o povo não entende", responde: <em>"A missa é uma ação, não um curso de instrução religiosa. No Calvário não havia explicações."</em> <span class="cite">(§ 24, n. 83)</span></p>` },
+          { n: 31, q: "Qual é a estrutura geral das orações (coletas) da Liturgia romana? A quem se dirigem as coletas da missa e por quê?", a: `
+            <p><strong>Estrutura</strong> — três partes <span class="cite">(§ 25, n. 87)</span>: <strong>invocação</strong> (<em>Deus</em>), <strong>motivo</strong> (<em>qui…</em>) e <strong>petição</strong> (<em>præsta</em>). O convite é o <em>Oremus</em>.</p>
+            <p><strong>A quem se dirigem:</strong></p>
+            <ul>
+              <li>a maior parte, a <strong>Deus Padre</strong> — porque Cristo nos ensinou a rezar "Padre Nosso" e Ele é o medianeiro;</li>
+              <li>poucas, a <strong>Deus Filho</strong>;</li>
+              <li><strong>nenhuma</strong> ao Espírito Santo — pois "ao Dom não se pede o dom, mas ao Doador".</li>
+            </ul>
+            <p class="cite">(§ 25, n. 87)</p>` },
+          { n: 32, q: "Qual a origem e o significado do Aleluia? Quando e por que é suprimido na Liturgia?", a: `
+            <p><strong>Origem e significado</strong>: de <em>halelú-Iavé</em> = "louvai a Deus" — um <strong>ato de amor</strong> e <strong>grito de alegria</strong>, passado do culto israelítico ao cristão. <span class="cite">(§ 28, n. 104)</span></p>
+            <p><strong>Supressão:</strong> por ser sinal de alegria, suprime-se como <strong>sinal de penitência e de luto</strong> — na <strong>Septuagésima</strong>, desde as primeiras vésperas. <span class="cite">(§ 28, n. 104)</span></p>` },
+          { n: 33, q: "Que significa, na Liturgia, a posição de pé? Quando o celebrante e o povo ficam de pé, e qual a regra para os assistentes da missa privada?", a: `
+            <p><strong>Significa</strong> reverência, prontidão, confiança e alegria. <span class="cite">(§ 31, n. 107)</span></p>
+            <p><strong>O celebrante</strong> está de pé no sacrifício e na maior parte das funções, como intercessor.</p>
+            <p><strong>O povo</strong> fica de pé para ouvir o Evangelho, rezar o Credo, no tempo pascal e ao domingo, e aos cânticos <em>Benedictus</em> e <em>Magnificat</em>.</p>
+            <div class="ans-note"><p><strong>Nota:</strong> o n. 107 trata das atitudes do celebrante e do povo em geral, sem isolar uma regra própria para os assistentes da missa privada.</p></div>` },
+          { n: 34, q: "Quais as significações do ósculo litúrgico? Qual a ordem dos ósculos ao entregar e ao receber um objeto nas funções litúrgicas?", a: `
+            <p><strong>Significações</strong> <span class="cite">(§ 32, n. 115)</span>: caridade fraterna (na paz), veneração (altar, evangeliário, patena, cruz, velas), reverência (mão do bispo/sacerdote) e gratidão.</p>
+            <p><strong>Ordem dos ósculos:</strong></p>
+            <ul>
+              <li><strong>Ao receber</strong> — primeiro a <strong>mão</strong>, depois o <strong>objeto</strong>.</li>
+              <li><strong>Ao oferecer</strong> — primeiro o <strong>objeto</strong>, depois a <strong>mão</strong>.</li>
+              <li><strong>Exceção</strong> (vela/ramo bento) — primeiro o <strong>objeto bento</strong>, depois a mão.</li>
+            </ul>
+            <p>Com o Santíssimo exposto, omitem-se os ósculos do incenso e do barrete. <span class="cite">(§ 32, n. 115)</span></p>` },
+          { n: 35, q: "Trace a evolução histórica do modo de fazer o sinal da cruz e descreva como se faz hoje o pequeno sinal (persignação) e a grande cruz.", a: `
+            <p><strong>Evolução</strong> <span class="cite">(§ 32, n. 118)</span>: no princípio, com um dedo sobre a <strong>fronte</strong>; no séc. IV, sobre <strong>fronte e boca</strong>; no séc. XII, sobre <strong>fronte, boca e peito</strong>.</p>
+            <ul>
+              <li><strong>Pequeno sinal (persignação)</strong> — com a <strong>polpa do polegar</strong>, sobre a fronte, a boca e o peito.</li>
+              <li><strong>Grande cruz</strong> — com a <strong>mão estendida</strong>, da fronte ao peito e do ombro esquerdo ao direito. Na missa solene faz-se <strong>53 vezes</strong>.</li>
+            </ul>
+            <p class="cite">(§ 32, n. 118–119)</p>` },
+          { n: 36, q: "Para que usos serve a água na Liturgia? Exponha, segundo o Catecismo Romano, as três razões da mistura de água e vinho na missa.", a: `
+            <p><strong>Usos da água</strong> <span class="cite">(§ 33, n. 120)</span>: água batismal, água benta, água gregoriana, mistura com o vinho, e purificações. É símbolo da pureza interior.</p>
+            <p><strong>As três razões da mistura (Catecismo Romano):</strong></p>
+            <ol>
+              <li>porque <strong>Nosso Senhor o fez</strong>;</li>
+              <li>porque renova a <strong>lembrança do sangue e da água</strong> do lado de Cristo;</li>
+              <li>porque "as águas" designam os povos — logo, significa a <strong>união do povo com Cristo</strong>, a Cabeça.</li>
+            </ol>
+            <p class="cite">(§ 33, n. 120)</p>` },
+          { n: 37, q: "Qual é a matéria válida para a preparação das hóstias? Que matéria seria inválida ou duvidosa?", a: `
+            <p><strong>Válida</strong> <span class="cite">(§ 35, n. 122)</span>: só a <strong>farinha de trigo</strong> como vem do moinho (mesmo com partes da casca).</p>
+            <p><strong>Inválida:</strong></p>
+            <ul>
+              <li>a massa da qual se tirou o <strong>glúten</strong>, restando só o amido;</li>
+              <li>o próprio <strong>glúten</strong> isolado.</li>
+            </ul>
+            <div class="ans-note"><p>As hóstias a consagrar devem ser recentes (até 20 dias); entre a cozedura e a comunhão, não mais de 30 dias. <span class="cite">(§ 35, n. 123)</span></p></div>` },
+          { n: 38, q: "Que determina a legislação litúrgica sobre a luz elétrica no altar e na igreja?", a: `
+            <p><strong>Proibida</strong> <span class="cite">(§ 37, n. 127)</span>:</p>
+            <ul>
+              <li>entre as <strong>velas litúrgicas</strong> do altar;</li>
+              <li>em lugar das <strong>lâmpadas/velas</strong> que ardem diante do Santíssimo ou das relíquias;</li>
+              <li>dentro do <strong>trono da exposição</strong>.</li>
+            </ul>
+            <p><strong>Permitida</strong> nas demais partes da igreja, conforme o prudente arbítrio do ordinário, guardada a gravidade devida; admite-se para as imagens de Nosso Senhor e o ornamento exterior do tabernáculo (não para nichos de santos no altar). <span class="cite">(§ 37, n. 127)</span></p>` }
         ]
       },
       {
         title: "IV. Os santos lugares e os acessórios do altar",
         range: "Questões 39–44",
         items: [
-          { n: 39, q: "Exponha o simbolismo do altar segundo a tradição litúrgica.", a: "" },
-          { n: 40, q: "Quantas toalhas deve ter o altar, de que matéria, e como devem ser dispostas? Quem as benze?", a: "" },
-          { n: 41, q: "Que é o corporal, que simboliza, e onde convém bordar a sua cruz? Por quê?", a: "" },
-          { n: 42, q: "Quais os requisitos da cruz do altar e em que lugares ela não pode ser colocada?", a: "" },
-          { n: 43, q: "Que é o coro (presbitério) e que móveis devem guarnecê-lo? Descreva a credência e o banco.", a: "" },
-          { n: 44, q: "Em que três casos é proibido o toque da campainha na missa? Que sinais são prescritos e quais são apenas tolerados?", a: "" }
+          { n: 39, q: "Exponha o simbolismo do altar segundo a tradição litúrgica.", a: `
+            <p>O altar é símbolo <span class="cite">(§ 47, n. 162)</span>:</p>
+            <ol>
+              <li><strong>de Jesus Cristo</strong> — <em>"O altar da Santa Igreja é Cristo mesmo"</em>;</li>
+              <li><strong>do coração humano</strong> — sobre ele deve arder o fogo da <strong>caridade</strong>;</li>
+              <li>outros veem nele o <strong>presépio</strong> (São João Crisóstomo) ou a <strong>cruz</strong> (Santo Tomás).</li>
+            </ol>` },
+          { n: 40, q: "Quantas toalhas deve ter o altar, de que matéria, e como devem ser dispostas? Quem as benze?", a: `
+            <p>Segundo o Missal de São Pio V <span class="cite">(§ 50, n. 163)</span>:</p>
+            <ul>
+              <li><strong>Quantas:</strong> três.</li>
+              <li><strong>Matéria:</strong> cânhamo ou linho branco.</li>
+              <li><strong>Disposição:</strong> as duas inferiores cobrem toda a mesa (podem ser uma só dobrada); a de cima chega <strong>até à terra dos dois lados</strong>.</li>
+              <li><strong>Quem as benze:</strong> o <strong>bispo</strong>.</li>
+            </ul>
+            <p>Razão: asseio, decência e reverência ao Preciosíssimo Sangue que por acaso se derrame.</p>` },
+          { n: 41, q: "Que é o corporal, que simboliza, e onde convém bordar a sua cruz? Por quê?", a: `
+            <p><strong>O que é</strong> <span class="cite">(§ 50, n. 164)</span>: o pano sagrado destinado a <strong>receber o Corpo sacramentado</strong>; o mais antigo dos paramentos.</p>
+            <p><strong>Simboliza</strong> o <strong>santo sudário</strong> (os panos sepulcrais de Cristo). <span class="cite">(§ 50, n. 165)</span></p>
+            <p><strong>Onde bordar a cruz e por quê:</strong> uma cruz pequena <strong>rente à orla, do lado do celebrante</strong> (não no meio) — para evitar pôr a hóstia em lugares diferentes e diminuir o <strong>perigo de perder partículas</strong>. <span class="cite">(§ 50, n. 164)</span></p>` },
+          { n: 42, q: "Quais os requisitos da cruz do altar e em que lugares ela não pode ser colocada?", a: `
+            <p><strong>Requisitos</strong> <span class="cite">(§ 50, n. 167)</span>: cruz <strong>com a imagem de Cristo crucificado</strong> (a cruz sem imagem não basta); colocada no altar, <strong>acima dos castiçais</strong>; <strong>visível</strong> ao celebrante e ao povo (pode ser um crucifixo grande no retábulo).</p>
+            <p><strong>Onde NÃO pode ser colocada:</strong> onde se expõe o Santíssimo; no corporal da exposição; no trono de degraus; <strong>acima do altar</strong>; diante da porta do sacrário (pode ficar <em>sobre</em> o sacrário). <span class="cite">(§ 50, n. 167)</span></p>` },
+          { n: 43, q: "Que é o coro (presbitério) e que móveis devem guarnecê-lo? Descreva a credência e o banco.", a: `
+            <p><strong>Coro (presbitério)</strong> <span class="cite">(§ 51, n. 186)</span>: espaço próximo do altar, mais elevado que a nave, separado pela balaustrada.</p>
+            <p><strong>Móveis:</strong> credência, banco dos ministros, tamboretes/mochos, trono episcopal, faldistório. <span class="cite">(§ 51, n. 187–188)</span></p>
+            <ul>
+              <li><strong>Credência</strong> (<em>abacus</em>) — mesa do <strong>lado da epístola</strong>; só nas missas solenes se cobre com toalha branca até o chão.</li>
+              <li><strong>Banco</strong> (<em>scamnum</em>) — do lado da epístola, para o celebrante e os dois ministros; coberto de estofo (cor dos paramentos); encosto permitido.</li>
+            </ul>` },
+          { n: 44, q: "Em que três casos é proibido o toque da campainha na missa? Que sinais são prescritos e quais são apenas tolerados?", a: `
+            <p><strong>Prescritos</strong> <span class="cite">(§ 52, n. 200)</span>: ao <em>Sanctus</em> e à <strong>elevação</strong>.</p>
+            <p><strong>Tolerados (costume):</strong> início da consagração, ofertório, <em>Domine non sum dignus</em>, pequena elevação.</p>
+            <p><strong>Proibido:</strong> na missa com o <strong>Santíssimo exposto</strong>; e em qualquer missa <strong>durante a exposição</strong>.</p>
+            <div class="ans-note"><p><strong>Nota:</strong> a questão fala em "três casos", mas Reus enuncia essas duas situações da exposição (mais o não tocar à elevação em certas missas rezadas, n. 813); não agrupa literalmente "três".</p></div>` }
         ]
       },
       {
         title: "V. As vestes e os vasos sagrados",
         range: "Questões 45–52",
         items: [
-          { n: 45, q: "Exponha o simbolismo de cada cor litúrgica e as principais restrições: que cores são proibidas, que telas podem substituir as cores, e que se veda nos paramentos pretos?", a: "" },
-          { n: 46, q: "Em que casos as vestes litúrgicas perdem a bênção? O forro renovado exige nova bênção?", a: "" },
-          { n: 47, q: "Qual a origem histórica do manípulo, como é usado hoje e quando nunca se deve usá-lo?", a: "" },
-          { n: 48, q: "Como trazem a estola o Bispo, o sacerdote e o diácono? Em que casos o seu uso é obrigatório e quando é proibida?", a: "" },
-          { n: 49, q: "Exponha a origem da casula e o que era a <em>planeta plicata</em> do diácono.", a: "" },
-          { n: 50, q: "Quando é proibido e quando é prescrito o uso do barrete nas funções sagradas?", a: "" },
-          { n: 51, q: "Que matéria exige a lei eclesiástica para o cálice? Por quem deve ser consagrado, em que casos fica execrado, e que obrigação há quando a douradura se gasta?", a: "" },
-          { n: 52, q: "Quando foi introduzida a custódia (ostensório) e por ocasião de quê? Que requisito é prescrito para ela?", a: "" }
+          { n: 45, q: "Exponha o simbolismo de cada cor litúrgica e as principais restrições: que cores são proibidas, que telas podem substituir as cores, e que se veda nos paramentos pretos?", a: `
+            <div class="ans-table-wrap"><table>
+              <thead><tr><th>Cor</th><th>Simboliza</th></tr></thead>
+              <tbody>
+                <tr><td>Branco</td><td>pureza, graça, alegria</td></tr>
+                <tr><td>Vermelho</td><td>fogo, sangue — amor divino e martírio</td></tr>
+                <tr><td>Verde</td><td>esperança da vida (domingos)</td></tr>
+                <tr><td>Roxo</td><td>penitência</td></tr>
+                <tr><td>Preto</td><td>luto</td></tr>
+              </tbody>
+            </table></div>
+            <p><strong>Restrições</strong> <span class="cite">(§ 54, n. 209)</span>:</p>
+            <ul>
+              <li><strong>Proibidas:</strong> outras cores (ex.: amarelo/ouro).</li>
+              <li><strong>Telas substitutas:</strong> ouro puro substitui branco, vermelho e verde; prata substitui o branco.</li>
+              <li><strong>Paramentos pretos:</strong> sem emblemas fúnebres (caveiras, ossos, cruzes brancas), "pois onde está Cristo, aí está a vida".</li>
+            </ul>` },
+          { n: 46, q: "Em que casos as vestes litúrgicas perdem a bênção? O forro renovado exige nova bênção?", a: `
+            <p><strong>Perdem a bênção</strong> quando sofrem lesões que fazem perder a forma primitiva <span class="cite">(§ 56, n. 212)</span>:</p>
+            <ul>
+              <li>desfazendo-se as costuras;</li>
+              <li>renovando-as pela metade;</li>
+              <li>rompendo-se o cordão de modo que nenhuma parte sirva.</li>
+            </ul>
+            <p>O <strong>forro renovado NÃO exige nova bênção</strong>. <span class="cite">(§ 56, n. 212)</span></p>` },
+          { n: 47, q: "Qual a origem histórica do manípulo, como é usado hoje e quando nunca se deve usá-lo?", a: `
+            <p><strong>Origem</strong> <span class="cite">(§ 58, n. 220)</span>: era o <strong>lenço de uso comum</strong>; tornou-se lenço de cerimônia (cônsules e pretores), distintivo dos clérigos, e <strong>pouco a pouco uma faixa</strong>.</p>
+            <p><strong>Hoje:</strong> faixa de ~1 m, sobre o <strong>braço esquerdo</strong>, com uma <strong>cruz no meio</strong>.</p>
+            <p><strong>Nunca se usa</strong> quando se usa a <strong>capa de asperges</strong> (Rub. Gen. XIX, 4). <span class="cite">(§ 58, n. 220)</span></p>` },
+          { n: 48, q: "Como trazem a estola o Bispo, o sacerdote e o diácono? Em que casos o seu uso é obrigatório e quando é proibida?", a: `
+            <p><strong>Como se traz</strong> <span class="cite">(§ 58, n. 221)</span>:</p>
+            <ul>
+              <li><strong>Bispo</strong> — suspensa no pescoço, caindo direita;</li>
+              <li><strong>Sacerdote</strong> — cruzada no peito sobre a alva;</li>
+              <li><strong>Diácono</strong> — a tiracolo.</li>
+            </ul>
+            <p><strong>Obrigatória:</strong> na missa, nos sacramentos (salvo a penitência) e sacramentais, no enterro/procissão, ao pregar, ao tocar vaso com o Santíssimo, ao comungar.</p>
+            <p><strong>Proibida:</strong> no <strong>sermão fúnebre</strong>; e aos párocos/diretores de pias uniões que acompanham procissão ou enterro. <span class="cite">(§ 58, n. 221–222)</span></p>` },
+          { n: 49, q: "Exponha a origem da casula e o que era a <em>planeta plicata</em> do diácono.", a: `
+            <p><strong>Origem</strong> <span class="cite">(§ 58, n. 225)</span>: da antiga <em>paenula</em> — manto sem mangas, em forma de sino, com abertura para a cabeça (um poncho); chamada também <em>planeta</em>. Comum a todos os clérigos até o séc. IX–X; só por volta do ano 1000 ficou reservada à missa.</p>
+            <p><strong>A <em>planeta plicata</em>:</strong> nos <strong>dias de penitência</strong>, o diácono vestia a casula <strong>dobrada para dentro na frente</strong>; do Evangelho à comunhão, enrolava-a numa faixa no <strong>ombro esquerdo</strong>, deixando as mãos livres. Hoje usa o <strong>estolão</strong>. <span class="cite">(§ 58, n. 225)</span></p>` },
+          { n: 50, q: "Quando é proibido e quando é prescrito o uso do barrete nas funções sagradas?", a: `
+            <p>O barrete <strong>não é ornamento litúrgico</strong>. <span class="cite">(§ 58, n. 230)</span></p>
+            <p><strong>Proibido:</strong></p>
+            <ol>
+              <li>ao <strong>pregador</strong> com o Santíssimo exposto;</li>
+              <li>ao <strong>oficiante/celebrante</strong> exercendo uma função sacra;</li>
+              <li><strong>no ofício</strong>, na recitação do Pater Noster, <em>absolutio</em>, <em>benedictio</em>, cânticos e <em>Quicumque</em>.</li>
+            </ol>
+            <p><strong>Prescrito:</strong> para o celebrante que <strong>vai/volta do altar</strong> (tirar ao chegar, pôr ao sair); só clérigos paramentados podem levá-lo ao passar pela igreja; ninguém além do oficiante nas procissões; ninguém na procissão teofórica. <span class="cite">(§ 58, n. 230)</span></p>` },
+          { n: 51, q: "Que matéria exige a lei eclesiástica para o cálice? Por quem deve ser consagrado, em que casos fica execrado, e que obrigação há quando a douradura se gasta?", a: `
+            <p><strong>Matéria</strong> <span class="cite">(§ 60, n. 232)</span>: <strong>ouro ou prata</strong>, ou ao menos a <strong>copa de prata dourada por dentro</strong>; por pobreza, admite-se estanho ou bronze de alumínio.</p>
+            <p><strong>Consagrado</strong> pelo <strong>bispo</strong>. <span class="cite">(§ 60, n. 236)</span></p>
+            <p><strong>Fica execrado:</strong> se perdeu a forma primitiva (fenda no fundo, quebrado em duas partes); se foi usado para fins indecorosos ou posto à venda.</p>
+            <p><strong>Douradura gasta:</strong> obrigação <strong>grave</strong> de dourá-lo de novo — mas a nova consagração <strong>omite-se</strong>. <span class="cite">(§ 60, n. 236)</span></p>` },
+          { n: 52, q: "Quando foi introduzida a custódia (ostensório) e por ocasião de quê? Que requisito é prescrito para ela?", a: `
+            <p><strong>Quando:</strong> no <strong>século XIV</strong>, por ocasião da <strong>festa de Corpo de Deus</strong>. <span class="cite">(§ 60, n. 241)</span></p>
+            <p><strong>Requisito prescrito:</strong> que seja <strong>munida de uma cruz</strong>.</p>
+            <div class="ans-note"><p>A luneta que recebe a hóstia deve ser de ouro ou prata dourada, benta pelo bispo. <span class="cite">(§ 60, n. 242)</span></p></div>` }
         ]
       },
       {
         title: "VI. O tempo sacro",
         range: "Questões 53–60",
         items: [
-          { n: 53, q: "Como se deu a substituição do sábado pelo domingo como dia do culto? Cite os testemunhos escriturísticos e explique os nomes \"dies dominica\" e \"dies solis\".", a: "" },
-          { n: 54, q: "Como se classificam os domingos quanto ao rito e quanto à dignidade? Enumere os dez domingos de primeira classe e diga qual o seu privilégio.", a: "" },
-          { n: 55, q: "Que são as quatro têmporas e em que semanas ocorrem? Que ensina o Papa S. Leão Magno sobre sua origem?", a: "" },
-          { n: 56, q: "A festa do Natal era conhecida nos três primeiros séculos? Quando aparece pela primeira vez a data de 25 de dezembro, e que festa pagã ela veio substituir?", a: "" },
-          { n: 57, q: "De que três milagres a Epifania é festa coletiva?", a: "" },
-          { n: 58, q: "Que festa se celebra a 2 de fevereiro e por que é festa do Senhor? Com que cor se faz a procissão das velas?", a: "" },
-          { n: 59, q: "Qual a origem da quaresma e por que ela começa na quarta-feira de cinzas e não no primeiro domingo?", a: "" },
-          { n: 60, q: "Donde deriva a cerimônia de velar as imagens no tempo da paixão e que significava o véu quaresmal?", a: "" }
+          { n: 53, q: "Como se deu a substituição do sábado pelo domingo como dia do culto? Cite os testemunhos escriturísticos e explique os nomes \"dies dominica\" e \"dies solis\".", a: `
+            <p>A Igreja tem o poder de substituir o sábado pelo domingo, porque Cristo aboliu, pela morte, as leis cerimoniais. Os primeiros cristãos celebravam a missa no <strong>primeiro dia da semana</strong>. <span class="cite">(§ 62, n. 249–250)</span></p>
+            <p><strong>Testemunhos escriturísticos:</strong></p>
+            <ul>
+              <li><strong>At 20, 7</strong> — S. Paulo em Trôade, <em>una sabbati</em>;</li>
+              <li><strong>1 Cor 16, 2</strong> — <em>per unam sabbati</em>;</li>
+              <li><strong>Apoc 1, 10</strong> — "dia do Senhor" (<em>dies dominica</em>).</li>
+            </ul>
+            <p><strong>Nomes:</strong> <em>dies dominica</em> = dia do Senhor (pela ressurreição); <em>dies solis</em> = dia do sol, porque <strong>Cristo é o verdadeiro Sol de justiça</strong>. <span class="cite">(§ 62, n. 249)</span></p>` },
+          { n: 54, q: "Como se classificam os domingos quanto ao rito e quanto à dignidade? Enumere os dez domingos de primeira classe e diga qual o seu privilégio.", a: `
+            <p><strong>Quanto ao rito:</strong> todos são <em>semiduplex</em>, exceto <strong>três</strong> (Páscoa, Pascoela e Pentecostes). <span class="cite">(§ 63, n. 253)</span></p>
+            <p><strong>Quanto à dignidade:</strong> maiores e menores; os maiores em duas classes.</p>
+            <p><strong>Os dez de primeira classe:</strong> o 1.º do Advento; os <strong>4 da Quaresma</strong>; os <strong>4 seguintes</strong> (Paixão, Ramos, Páscoa, Pascoela); e <strong>Pentecostes</strong>.</p>
+            <p><strong>Privilégio:</strong> são <strong>preferidos, na ocorrência, a todas as festas</strong> (que devem ser transferidas). <span class="cite">(§ 63, n. 253)</span></p>` },
+          { n: 55, q: "Que são as quatro têmporas e em que semanas ocorrem? Que ensina o Papa S. Leão Magno sobre sua origem?", a: `
+            <p><strong>O que são:</strong> a <strong>quarta, sexta e sábado</strong> de quatro semanas, com <strong>jejum</strong>. <span class="cite">(§ 66, n. 265)</span></p>
+            <p><strong>Semanas:</strong> 1.ª da Quaresma; 1.ª de Pentecostes; 3.ª de setembro; 3.ª de dezembro.</p>
+            <p><strong>S. Leão Magno</strong> ensina que as têmporas <strong>fora da Quaresma foram instituídas pelos apóstolos</strong>, e foi quem primeiro as relacionou com as <strong>quatro estações</strong>. <span class="cite">(§ 66, n. 265–266)</span></p>` },
+          { n: 56, q: "A festa do Natal era conhecida nos três primeiros séculos? Quando aparece pela primeira vez a data de 25 de dezembro, e que festa pagã ela veio substituir?", a: `
+            <p><strong>Nos três primeiros séculos:</strong> <strong>não</strong> era conhecida (silêncio de Tertuliano, Orígenes). <span class="cite">(§ 68, n. 275)</span></p>
+            <p><strong>25 de dezembro:</strong> aparece pela primeira vez em <strong>Roma, no ano de 354</strong> (<em>Depositio Martyrum</em>) — provavelmente já em 336.</p>
+            <p><strong>Festa pagã substituída:</strong> a festa do <strong>sol invencível</strong> (<em>Natalis Solis invicti</em>), dedicada a <strong>Mitras</strong>. Os cristãos ficaram com o dia e consagraram a festa ao nascimento de Cristo, o verdadeiro Sol de justiça. <span class="cite">(§ 68, n. 277–278)</span></p>` },
+          { n: 57, q: "De que três milagres a Epifania é festa coletiva?", a: `
+            <ol>
+              <li>a <strong>adoração dos Magos</strong> (a estrela ao presépio);</li>
+              <li>as <strong>bodas de Caná</strong> (a água em vinho);</li>
+              <li>o <strong>Batismo de Cristo no Jordão</strong>.</li>
+            </ol>
+            <p>Depois de fixado o Natal em 25 de dezembro, o objeto principal passou a ser a adoração dos Magos e a vocação dos pagãos. <span class="cite">(§ 70, n. 284)</span></p>` },
+          { n: 58, q: "Que festa se celebra a 2 de fevereiro e por que é festa do Senhor? Com que cor se faz a procissão das velas?", a: `
+            <p>A <strong>Purificação de Maria Santíssima</strong> (Candelária). <span class="cite">(§ 71, n. 288)</span></p>
+            <p><strong>É festa do Senhor</strong> por ser a comemoração da <strong>Apresentação do Menino Jesus no templo</strong>, no encontro com Simeão.</p>
+            <p><strong>Cor da procissão:</strong> antigamente com paramentos <strong>pretos</strong>; <strong>hoje, roxos</strong> (e não se transfere para outro dia). <span class="cite">(§ 71, n. 288)</span></p>` },
+          { n: 59, q: "Qual a origem da quaresma e por que ela começa na quarta-feira de cinzas e não no primeiro domingo?", a: `
+            <p><strong>Origem</strong> <span class="cite">(§ 76, n. 304)</span>: instituída pela Igreja para <strong>imitar o Redentor</strong>, que jejuou 40 dias no deserto.</p>
+            <p><strong>Por que na quarta-feira de cinzas:</strong> começava antes no <strong>primeiro domingo</strong>; mas, como aos domingos não se jejua, no <strong>século VII acrescentaram-se 4 dias</strong> para completar os <strong>40 dias de jejum</strong> — daí principiar na quarta-feira de cinzas. <span class="cite">(§ 76, n. 304)</span></p>` },
+          { n: 60, q: "Donde deriva a cerimônia de velar as imagens no tempo da paixão e que significava o véu quaresmal?", a: `
+            <p><strong>Donde deriva</strong> <span class="cite">(§ 77, n. 308)</span>: do costume, no <strong>começo da Quaresma</strong>, de <strong>cobrir ou tirar da igreja tudo o que servia de ornato</strong> — a igreja material toma parte na penitência. Como a cruz era ornato, também era coberta. É de origem galicana (séc. VII).</p>
+            <p><strong>O véu quaresmal</strong> (<em>velum quadragesimale</em>): recordava a <strong>obrigação de jejuar</strong> ("pano de fome") e <strong>impedia a vista do "Santo dos Santos"</strong>, equiparando os fiéis aos penitentes públicos. <span class="cite">(§ 77, n. 308)</span></p>` }
         ]
       },
       {
         title: "VII. A santa missa: explicação, rubricas e cerimônias",
         range: "Questões 61–68",
         items: [
-          { n: 61, q: "Qual a verdadeira etimologia da palavra \"missa\" e como ela passou a designar o santo sacrifício?", a: "" },
-          { n: 62, q: "Qual a origem do Kyrie da missa? Por que se acrescentou o <em>Christe eleison</em> e desde quando as invocações são nove?", a: "" },
-          { n: 63, q: "Exponha a história da introdução do Credo na missa: por que surgiu, que concílio o prescreveu e quando foi admitido na Liturgia romana?", a: "" },
-          { n: 64, q: "Que simboliza a mistura da água com o vinho no ofertório? Por que a água é benzida — e por que não se benze na missa de réquiem?", a: "" },
-          { n: 65, q: "Trace a história da elevação das sagradas espécies na missa: quando surgiu a elevação da hóstia, do cálice, a genuflexão de adoração e a incensação do Santíssimo?", a: "" },
-          { n: 66, q: "Por quem foi introduzido o <em>Agnus Dei</em> na missa? Por que ele falta na missa do sábado santo, e desde quando se repete três vezes?", a: "" },
-          { n: 67, q: "Defina, quanto à solenidade, a missa cantada, a missa solene, a missa privada e a missa pontifical. A missa rezada acompanhada de canto é missa cantada no sentido litúrgico?", a: "" },
-          { n: 68, q: "Na celebração da missa rezada, quando o celebrante conserva os olhos baixos, e em que momentos deve elevá-los? Em que ocasiões os conserva fixos no SS. Sacramento?", a: "" }
+          { n: 61, q: "Qual a verdadeira etimologia da palavra \"missa\" e como ela passou a designar o santo sacrifício?", a: `
+            <p><strong>Etimologia</strong> <span class="cite">(§ 99, n. 457)</span>: vem do <strong>latim</strong>; é <strong>substantivo, igual a <em>missio</em> / <em>dimissio</em></strong> (= despedida). Não é particípio de <em>mittere</em>.</p>
+            <p><strong>Como passou a designar o sacrifício:</strong> a frase <em>"Ite, missa est"</em> ("é despedida") servia para <strong>concluir qualquer reunião litúrgica</strong>. Como os catecúmenos eram despedidos antes da missa dos fiéis, e esta terminava também com o <em>Ite, missa est</em>, o termo ficou <strong>reservado ao santo sacrifício</strong> (séc. VI). <span class="cite">(§ 99, n. 457)</span></p>` },
+          { n: 62, q: "Qual a origem do Kyrie da missa? Por que se acrescentou o <em>Christe eleison</em> e desde quando as invocações são nove?", a: `
+            <p><strong>Origem</strong> <span class="cite">(§ 102, n. 475)</span>: o Kyrie é o <strong>resto de uma ladainha</strong>, adotada no <strong>séc. IV</strong> das Liturgias orientais; abreviando o rito, tornou-se parte independente.</p>
+            <p><strong>Christe eleison:</strong> foi <strong>acrescentado no Ocidente</strong>.</p>
+            <p><strong>Nove invocações:</strong> antes ao arbítrio do celebrante, foram <strong>reduzidas a nove desde o séc. IX</strong> — três a cada Pessoa Divina. <span class="cite">(§ 102, n. 475)</span></p>` },
+          { n: 63, q: "Exponha a história da introdução do Credo na missa: por que surgiu, que concílio o prescreveu e quando foi admitido na Liturgia romana?", a: `
+            <p><strong>Por que surgiu</strong> <span class="cite">(§ 102, n. 486)</span>: contra as <strong>heresias</strong> (séc. V), introduziu-se o símbolo niceno-constantinopolitano na missa.</p>
+            <p><strong>Concílios:</strong> Niceia (325) declarou a divindade do Filho; Constantinopla (381), a do Espírito Santo; o <strong>Concílio de Calcedônia (451) prescreveu o Credo</strong>.</p>
+            <p><strong>Na Liturgia romana:</strong> admitido em <strong>1014</strong>, a instância de Santo Henrique II (Roma resistira, "porque nunca fora manchada pela heresia"). <span class="cite">(§ 102, n. 486)</span></p>` },
+          { n: 64, q: "Que simboliza a mistura da água com o vinho no ofertório? Por que a água é benzida — e por que não se benze na missa de réquiem?", a: `
+            <p><strong>Simboliza</strong> <span class="cite">(§ 103, n. 493)</span>: o vinho, a <strong>divindade</strong>; a água, a <strong>humanidade</strong>. A mistura significa a Encarnação, o Corpo Místico e a água do Coração de Cristo.</p>
+            <p><strong>Por que a água é benzida:</strong> porque <strong>significa o povo</strong>, que neste mundo não pode estar sem pecado.</p>
+            <p><strong>Por que não na réquiem:</strong> essa missa diz-se pelas almas, que <strong>já não podem pecar</strong> e não precisam da bênção. <span class="cite">(§ 103, n. 493)</span></p>` },
+          { n: 65, q: "Trace a história da elevação das sagradas espécies na missa: quando surgiu a elevação da hóstia, do cálice, a genuflexão de adoração e a incensação do Santíssimo?", a: `
+            <div class="ans-table-wrap"><table>
+              <thead><tr><th>Rito</th><th>Quando surgiu</th></tr></thead>
+              <tbody>
+                <tr><td>Elevação da hóstia</td><td>fins do séc. XII</td></tr>
+                <tr><td>Elevação do cálice</td><td>1.ª metade do séc. XIV</td></tr>
+                <tr><td>Genuflexão de adoração</td><td>princípio do séc. XVI</td></tr>
+                <tr><td>Incensação do Santíssimo</td><td>séc. XIII (geral nos séc. XIV–XV)</td></tr>
+              </tbody>
+            </table></div>
+            <p class="cite">(§ 107, n. 521)</p>` },
+          { n: 66, q: "Por quem foi introduzido o <em>Agnus Dei</em> na missa? Por que ele falta na missa do sábado santo, e desde quando se repete três vezes?", a: `
+            <p><strong>Introduzido</strong> pelo <strong>Papa Sérgio I (&dagger; 701)</strong>, de família síria, que conheceu o canto oriental à fração do pão. <span class="cite">(§ 110, n. 535)</span></p>
+            <p><strong>Falta no sábado santo</strong> porque essa missa guarda o <strong>rito antigo</strong>, anterior à sua introdução.</p>
+            <p><strong>Três vezes</strong> desde o <strong>séc. IX</strong>; na terceira, na missa solene, pede-se <em>dona nobis pacem</em>. <span class="cite">(§ 110, n. 535)</span></p>` },
+          { n: 67, q: "Defina, quanto à solenidade, a missa cantada, a missa solene, a missa privada e a missa pontifical. A missa rezada acompanhada de canto é missa cantada no sentido litúrgico?", a: `
+            <ul>
+              <li><strong>Missa cantada</strong> — a que o celebrante canta <strong>sem diácono e subdiácono</strong>.</li>
+              <li><strong>Missa solene</strong> — a cantada <strong>com ministros sacros</strong> e canto do celebrante.</li>
+              <li><strong>Missa privada</strong> — <strong>sem canto</strong> do celebrante.</li>
+              <li><strong>Missa pontifical</strong> — celebrada por <strong>bispos</strong> com paramentos pontificais; pode ser solene ou rezada.</li>
+            </ul>
+            <p><strong>A missa rezada acompanhada de canto NÃO é missa cantada</strong> no sentido litúrgico — o que a define é o <strong>canto do próprio celebrante</strong>. <span class="cite">(§ 113, n. 550)</span></p>` },
+          { n: 68, q: "Na celebração da missa rezada, quando o celebrante conserva os olhos baixos, e em que momentos deve elevá-los? Em que ocasiões os conserva fixos no SS. Sacramento?", a: `
+            <p><strong>Olhos baixos</strong> <span class="cite">(§ 149, n. 676)</span>: indo/voltando do altar; ao dizer, voltado ao povo, <em>Dominus vobiscum</em>, <em>Orate fratres</em> e na bênção final.</p>
+            <p><strong>Eleva os olhos 11 vezes:</strong> <em>Munda cor</em>; <em>Suscipe sancte Pater</em>; <em>Offerimus tibi</em>; <em>Veni sanctificator</em>; <em>Suscipe Sancta Trinitas</em>; <em>Deo nostro</em> (prefácio); antes do <em>Te igitur</em>; ao <em>elevatis oculis</em>; durante toda a elevação; ao <em>Benedicat vos</em>.</p>
+            <p><strong>Fixos no SS. Sacramento (3 vezes):</strong> no <em>Memento</em> dos defuntos; no <em>Pater noster</em>; nas três orações antes da comunhão. <span class="cite">(§ 149, n. 676)</span></p>` }
         ]
       },
       {
         title: "VIII. Reverências litúrgicas e princípios gerais",
         range: "Questões 69–71",
         items: [
-          { n: 69, q: "Em que casos não se devem fazer inclinações? Que regra vale quando muitos nomes santos se seguem de perto?", a: "" },
-          { n: 70, q: "Exponha os princípios gerais para os servidores do altar: precedência em procissão, genuflexão ao cruzar o meio do altar, para onde se voltam após a genuflexão, posição da mão livre, e quando fazem as mesmas inclinações que o sacerdote.", a: "" },
-          { n: 71, q: "Em que dias há <em>Asperges</em> antes da missa cantada ou solene? Que particularidade há quanto ao manípulo dos ministros quando há <em>Asperges</em>?", a: "" }
+          { n: 69, q: "Em que casos não se devem fazer inclinações? Que regra vale quando muitos nomes santos se seguem de perto?", a: `
+            <p><strong>Não se fazem inclinações</strong> <span class="cite">(§ 32, n. 112–113)</span>:</p>
+            <ul>
+              <li><strong>de joelhos</strong> (salvo quando prescrita, p. ex. <em>Et incarnatus est</em> na solene);</li>
+              <li>quando o nome designa o santo só em <strong>sentido acomodatício</strong>;</li>
+              <li>aos nomes <em>Trinitas, Spiritus Sanctus, Sancti Angeli</em>;</li>
+              <li>ao nome do santo cuja <strong>festa se omite</strong>;</li>
+              <li>no <strong>título</strong> da epístola e do evangelho.</li>
+            </ul>
+            <p><strong>Muitos nomes juntos:</strong> faz-se <strong>uma só inclinação prolongada</strong>. <span class="cite">(§ 32, n. 112)</span></p>` },
+          { n: 70, q: "Exponha os princípios gerais para os servidores do altar: precedência em procissão, genuflexão ao cruzar o meio do altar, para onde se voltam após a genuflexão, posição da mão livre, e quando fazem as mesmas inclinações que o sacerdote.", a: `
+            <ul>
+              <li><strong>Genuflexão</strong> — os ministros inferiores dobram o joelho <strong>até o chão</strong> (in plano); genuflectem ao <strong>cruzar o meio do altar</strong>. <span class="cite">(§ 32, n. 108; § 156, n. 743)</span></li>
+              <li><strong>Inclinações como o sacerdote</strong> — junto com o celebrante <strong>quando este reza em voz alta</strong>. <span class="cite">(§ 156, n. 744; § 157, n. 747)</span></li>
+              <li><strong>Mãos</strong> — quando desocupadas, <strong>juntas diante do peito</strong>. <span class="cite">(§ 156, n. 744)</span></li>
+              <li><strong>Procissão</strong> — entram <strong>dois a dois</strong>, com passo grave e o barrete diante do peito. <span class="cite">(§ 163, n. 813)</span></li>
+            </ul>
+            <div class="ans-note"><p><strong>Falta na fonte:</strong> Reus não reúne todos os pontos — em especial <strong>para onde se voltam após a genuflexão</strong> e a <strong>mão livre sobre o peito</strong>; pertencem aos manuais de cerimônias.</p></div>` },
+          { n: 71, q: "Em que dias há <em>Asperges</em> antes da missa cantada ou solene? Que particularidade há quanto ao manípulo dos ministros quando há <em>Asperges</em>?", a: `
+            <p><strong>Em que dias</strong> <span class="cite">(§ 162, n. 805)</span>: nos <strong>domingos</strong>, só é <strong>prescrito</strong> antes da <strong>missa conventual cantada</strong>; nas outras igrejas é apenas <strong>permitido</strong>. É sempre o celebrante quem o faz (no tempo pascal, <em>Vidi aquam</em>).</p>
+            <p><strong>Particularidade do manípulo:</strong> para o Asperges veste-se alva, estola e pluvial, <strong>sem manípulo</strong> — pois <strong>o manípulo nunca se usa com a capa de asperges</strong>; só se toma depois, para começar a missa (o manípulo pertence à missa). <span class="cite">(§ 58, n. 220; § 162, n. 806–807)</span></p>` }
         ]
       },
       {
         title: "IX. Missa rezada com um ou dois acólitos",
         range: "Questões 72–76",
         items: [
-          { n: 72, q: "Que reverências faz o servidor durante as orações ao pé do altar na missa rezada, especialmente ao <em>Misereatur</em> e ao <em>Confiteor</em>? Por que não faz inclinação profunda do corpo quando ajoelhado?", a: "" },
-          { n: 73, q: "Como o servidor transporta o missal para o lado do Evangelho antes do Evangelho, e como o recoloca no lado da Epístola nas abluções? Pode virar o missal para os Próprios?", a: "" },
-          { n: 74, q: "Na missa rezada, quando o servidor busca a patena de comunhão e quando recita o <em>Confiteor</em>? Onde segura a patena durante a distribuição, e quando pode levantar-se depois da comunhão?", a: "" },
-          { n: 75, q: "Na missa rezada com dois acólitos, como se dividem as tarefas no ofertório, na comunhão dos próprios acólitos e nas abluções?", a: "" },
-          { n: 76, q: "Como procede o servidor nas preces leoninas após a missa rezada? Por que não bate no peito ao <em>Cor Jesu Sacratissimum</em>?", a: "" }
+          { n: 72, q: "Que reverências faz o servidor durante as orações ao pé do altar na missa rezada, especialmente ao <em>Misereatur</em> e ao <em>Confiteor</em>? Por que não faz inclinação profunda do corpo quando ajoelhado?", a: `
+            <p><strong>Por que não inclina o corpo quando ajoelhado</strong> <span class="cite">(§ 32, n. 111)</span>: porque, de joelhos, a <strong>inclinação profunda do corpo é substituída pela inclinação profunda da cabeça</strong> (com os ombros). Por isso, ao <em>Confiteor</em>, inclina a <strong>cabeça</strong>, não o corpo.</p>
+            <p>Princípio geral: faz as inclinações <strong>junto com o celebrante quando este reza em voz alta</strong>, voltando-se um pouco para ele ao <em>Misereatur tui</em> e ao <em>Tibi/Te Pater</em>. <span class="cite">(§ 156, n. 744; § 157, n. 747)</span></p>
+            <div class="ans-note"><p><strong>Falta na fonte:</strong> Reus descreve isso para os ministros sacros, não num tratado do servidor da missa rezada. O detalhe do servidor está nos resumos do site.</p></div>` },
+          { n: 73, q: "Como o servidor transporta o missal para o lado do Evangelho antes do Evangelho, e como o recoloca no lado da Epístola nas abluções? Pode virar o missal para os Próprios?", a: `
+            <div class="ans-gap">
+              <p class="ans-gap-title">⬜ Não desenvolvido no Pe. Reus.</p>
+              <p>O <em>Curso de Liturgia</em> trata do rito do celebrante e da missa solene (onde é o subdiácono quem transporta o missal), mas não descreve o passo-a-passo do <strong>servidor da missa rezada</strong>.</p>
+              <p>Ponto coberto pelos resumos do site (<em>acólito — missa rezada</em>). — a completar dessa fonte, como se fez na questão 15.</p>
+            </div>` },
+          { n: 74, q: "Na missa rezada, quando o servidor busca a patena de comunhão e quando recita o <em>Confiteor</em>? Onde segura a patena durante a distribuição, e quando pode levantar-se depois da comunhão?", a: `
+            <div class="ans-gap">
+              <p class="ans-gap-title">⬜ Não desenvolvido no Pe. Reus (para o servidor da missa rezada).</p>
+              <p>Reus descreve o <em>Confiteor</em> da comunhão e a patena da comunhão na missa solene / cantada (onde é o diácono), não o servidor da missa rezada.</p>
+              <p>Ponto coberto pelos resumos do site. — a completar dessa fonte.</p>
+            </div>` },
+          { n: 75, q: "Na missa rezada com dois acólitos, como se dividem as tarefas no ofertório, na comunhão dos próprios acólitos e nas abluções?", a: `
+            <div class="ans-gap">
+              <p class="ans-gap-title">⬜ Não desenvolvido no Pe. Reus.</p>
+              <p>Não há capítulo sobre a divisão de tarefas entre dois acólitos na missa rezada. As tarefas (galhetas, campainha, patena, abluções) estão nos resumos do site (<em>Acólito 1</em> e <em>Acólito 2 — missa rezada</em>). — a completar dessa fonte.</p>
+            </div>` },
+          { n: 76, q: "Como procede o servidor nas preces leoninas após a missa rezada? Por que não bate no peito ao <em>Cor Jesu Sacratissimum</em>?", a: `
+            <p><strong>As preces leoninas</strong> <span class="cite">(§ 112, n. 728)</span>: logo depois do último Evangelho, recitam-se com o povo as orações de <strong>Leão XIII (1884)</strong>, com a jaculatória ao <strong>Sagrado Coração</strong> (<em>Cor Iesu sacratissimum, miserere nobis</em>, três vezes). O celebrante desce ao degrau inferior, <strong>sem levar o cálice</strong>, e o servidor responde.</p>
+            <div class="ans-note"><p><strong>Falta na fonte:</strong> Reus <strong>não explica</strong> por que não se bate no peito ao <em>Cor Iesu sacratissimum</em>. O motivo (é aclamação de louvor, não confissão de culpa, e reza-se de pé, terminado o rito) pertence à praxe cerimonial.</p></div>` }
         ]
       },
       {
         title: "X. Missa cantada: o mestre de cerimônias e os ministros inferiores",
         range: "Questões 77–83",
         items: [
-          { n: 77, q: "Que ósculos (<em>solita oscula</em>) observa o mestre de cerimônias ao entregar e ao receber objetos do celebrante?", a: "" },
-          { n: 78, q: "Em que mão o turiferário segura o turíbulo, e por quê? Quando o incenso deixa de ser considerado bento?", a: "" },
-          { n: 79, q: "Que fórmula usa o mestre de cerimônias ao pedir a bênção do incenso? Que muda quando o celebrante é um bispo?", a: "" },
-          { n: 80, q: "Quando os ceroferários entram no santuário na missa cantada, quem os conduz, e quais são as suas posições? Que reverência fazem às genuflexões do celebrante na consagração?", a: "" },
-          { n: 81, q: "Que gestos cerimoniais fazem os acólitos enquanto seguram as velas? Genuflectem quando acompanham o cruciferário? Como procedem durante o canto do Evangelho?", a: "" },
-          { n: 82, q: "Enumere as regras próprias do cruciferário: como segura a cruz, que reverências faz com ela, quem passa primeiro nas portas, e como coloca a cruz no suporte (para onde a cruz está virada).", a: "" },
-          { n: 83, q: "Onde fica o mestre de cerimônias durante o Último Evangelho na missa cantada?", a: "" }
+          { n: 77, q: "Que ósculos (<em>solita oscula</em>) observa o mestre de cerimônias ao entregar e ao receber objetos do celebrante?", a: `
+            <p><strong>Regra dos <em>solita oscula</em></strong> <span class="cite">(§ 32, n. 115)</span>:</p>
+            <ul>
+              <li><strong>ao receber</strong> — primeiro a <strong>mão</strong>, depois o <strong>objeto</strong>;</li>
+              <li><strong>ao entregar</strong> — primeiro o <strong>objeto</strong>, depois a <strong>mão</strong>.</li>
+            </ul>
+            <p><strong>Com o Santíssimo exposto</strong> omitem-se os ósculos <em>honoris causa</em> (barrete, colher, turíbulo, hissope); não se omitem os <em>ratione ritus</em> (patena, mão do celebrante, cálice, evangeliário). <span class="cite">(§ 160, n. 858–859)</span></p>` },
+          { n: 78, q: "Em que mão o turiferário segura o turíbulo, e por quê? Quando o incenso deixa de ser considerado bento?", a: `
+            <div class="ans-gap">
+              <p class="ans-gap-title">⬜ Não desenvolvido diretamente no Pe. Reus.</p>
+              <p>Reus descreve <strong>como</strong> se maneja o turíbulo na incensação (§ 157, n. 748–749), mas não fixa em que mão o turiferário o leva ao caminhar, nem quando o incenso deixa de ser bento.</p>
+              <p>O que Reus afirma de próximo (§ 38, n. 129): <em>"o incenso não se benze quando só o Santíssimo é incensado, pois o Autor da santidade não é capaz de purificação."</em> — o restante a completar por outra fonte.</p>
+            </div>` },
+          { n: 79, q: "Que fórmula usa o mestre de cerimônias ao pedir a bênção do incenso? Que muda quando o celebrante é um bispo?", a: `
+            <p><strong>Fórmula</strong> <span class="cite">(§ 157, n. 748)</span>, um pouco inclinado, oferecendo a colherinha com os ósculos devidos:</p>
+            <p><em>"Benedicite, Pater reverende."</em></p>
+            <p><strong>Quando o celebrante é bispo:</strong> muda-se para <em>"Benedicite, Pater reverend<strong>issime</strong>."</em></p>
+            <div class="ans-note"><p>Na missa solene é o <strong>diácono</strong> que a pronuncia; na cantada com ajudantes, quem serve o incenso observa o mesmo. <span class="cite">(§ 162, n. 809)</span></p></div>` },
+          { n: 80, q: "Quando os ceroferários entram no santuário na missa cantada, quem os conduz, e quais são as suas posições? Que reverência fazem às genuflexões do celebrante na consagração?", a: `
+            <p><strong>Quando entram e saem</strong> <span class="cite">(§ 158, n. 769; § 162, n. 808)</span>: os ceroferários vêm ajoelhar-se <strong>diante do altar ao Prefácio</strong> e <strong>saem logo depois da consagração</strong> (nas missas de féria e de comunhão, ficam até depois da comunhão). São <strong>dois</strong> (quando muito, quatro).</p>
+            <p><strong>Reverência na consagração:</strong> permanecem <strong>ajoelhados</strong> (todos estão de joelhos desde o <em>Sanctus</em>), acompanhando de joelhos as elevações. <span class="cite">(§ 158, n. 769)</span></p>
+            <div class="ans-note"><p><strong>Falta na fonte:</strong> Reus indica quando entram e onde se ajoelham, mas não detalha <strong>quem os conduz</strong> ao santuário.</p></div>` },
+          { n: 81, q: "Que gestos cerimoniais fazem os acólitos enquanto seguram as velas? Genuflectem quando acompanham o cruciferário? Como procedem durante o canto do Evangelho?", a: `
+            <p><strong>Com as velas</strong> <span class="cite">(§ 158, n. 769)</span>: do <em>Sanctus</em> ficam ajoelhados até depois da consagração (ou da comunhão).</p>
+            <p><strong>Genuflectem com o cruciferário?</strong> <strong>Não</strong> — quem leva a cruz e os acólitos com os castiçais estão <strong>excetuados da genuflexão</strong> (fazem inclinação da cabeça). <span class="cite">(§ 82, n. 336)</span></p>
+            <p><strong>Durante o Evangelho</strong> <span class="cite">(§ 157, n. 756)</span>: vão à frente e, no lugar do canto, ficam <strong>imóveis</strong> com as velas (não fazem as inclinações e genuflexões que o diácono e o MC fazem).</p>` },
+          { n: 82, q: "Enumere as regras próprias do cruciferário: como segura a cruz, que reverências faz com ela, quem passa primeiro nas portas, e como coloca a cruz no suporte (para onde a cruz está virada).", a: `
+            <p>O que Reus estabelece <span class="cite">(§ 79, n. 313; § 82, n. 336)</span>: o cruciferário vai revestido de <strong>tunicela ou casula dobrada</strong>, <strong>distinto do subdiácono</strong>, e leva a cruz nos dias próprios. Enquanto segura a cruz, <strong>não genuflecte</strong>.</p>
+            <div class="ans-gap">
+              <p class="ans-gap-title">Falta na fonte</p>
+              <p>Reus não reúne um tratado das regras do cruciferário para a missa cantada comum. Os detalhes — como segura a cruz, para onde ela fica virada no suporte, quem passa primeiro nas portas — pertencem aos manuais de cerimônias. — a completar por outra fonte.</p>
+            </div>` },
+          { n: 83, q: "Onde fica o mestre de cerimônias durante o Último Evangelho na missa cantada?", a: `
+            <p>Segundo Reus <span class="cite">(§ 163, n. 812)</span>: o MC <strong>assiste ao livro e o fecha</strong> (a não ser que o subdiácono o mude), depois <strong>desce e recebe a bênção, ajoelhado no degrau inferior</strong>. Depois do Último Evangelho, dirige os ministros inferiores.</p>
+            <p>Ou seja, permanece <strong>junto ao altar / no degrau inferior</strong>.</p>
+            <div class="ans-note"><p><strong>Nota:</strong> Reus indica que recebe a bênção ajoelhado no degrau inferior, mas não fixa em palavras o lugar exato <em>durante</em> o canto do Último Evangelho.</p></div>` }
         ]
       },
       {
         title: "XI. Missa solene",
         range: "Questões 84–87",
         items: [
-          { n: 84, q: "Que preparação remota e próxima se exige dos ministros sagrados para a missa solene? Com que paramentos se vestem o diácono e o subdiácono?", a: "" },
-          { n: 85, q: "Nas orações ao pé do altar da missa solene, que inclinações fazem o diácono e o subdiácono ao <em>Misereatur</em> e ao <em>Confiteor</em> do celebrante? E que faz o celebrante durante o seu próprio <em>Confiteor</em>?", a: "" },
-          { n: 86, q: "Descreva o cerimonial da Epístola na missa solene: quem entrega o Epistolário ao subdiácono e como se entrega um livro litúrgico; quando o subdiácono começa a cantar, e o que se segue ao término da Epístola.", a: "" },
-          { n: 87, q: "Como se posicionam o diácono e o subdiácono atrás do celebrante para o Intróito e o Kyrie na missa solene? Como se recita o Kyrie?", a: "" }
+          { n: 84, q: "Que preparação remota e próxima se exige dos ministros sagrados para a missa solene? Com que paramentos se vestem o diácono e o subdiácono?", a: `
+            <p><strong>Preparação remota</strong> <span class="cite">(§ 100, n. 465)</span>:</p>
+            <ul>
+              <li><strong>negativa</strong> — imunidade de pecado grave, censura e irregularidade;</li>
+              <li><strong>positiva</strong> — a oração, sobretudo o ofício (Matinas e Laudes).</li>
+            </ul>
+            <p><strong>Preparação próxima</strong> <span class="cite">(§ 100, n. 466)</span>: a <strong>meditação</strong> (~meia hora) e, em todo caso, a preparação dos livros litúrgicos.</p>
+            <p><strong>Paramentos</strong> <span class="cite">(§ 156, n. 742)</span>: <strong>diácono</strong> — manípulo, estola e dalmática; <strong>subdiácono</strong> — manípulo e túnica.</p>` },
+          { n: 85, q: "Nas orações ao pé do altar da missa solene, que inclinações fazem o diácono e o subdiácono ao <em>Misereatur</em> e ao <em>Confiteor</em> do celebrante? E que faz o celebrante durante o seu próprio <em>Confiteor</em>?", a: `
+            <p><strong>Diácono e subdiácono</strong> <span class="cite">(§ 157, n. 747)</span>: fazem o sinal da cruz com o celebrante, <strong>inclinação ao <em>Gloria Patri</em> e ao <em>Misereatur tui</em></strong>, e rezam o <em>Confiteor</em> com <strong>inclinação profunda do corpo</strong>, voltando-se um pouco ao <em>Tibi/Te Pater</em>. Levantam-se depois de responder <em>Amen</em> ao <em>Misereatur</em> do celebrante.</p>
+            <p><strong>O celebrante durante o seu próprio <em>Confiteor</em></strong> <span class="cite">(§ 101, n. 469–470)</span>: permanece <strong>profundamente inclinado</strong> ao altar; terminadas as orações, sobe e <strong>beija o altar</strong>.</p>` },
+          { n: 86, q: "Descreva o cerimonial da Epístola na missa solene: quem entrega o Epistolário ao subdiácono e como se entrega um livro litúrgico; quando o subdiácono começa a cantar, e o que se segue ao término da Epístola.", a: `
+            <p><strong>Quem entrega e como</strong> <span class="cite">(§ 157, n. 754)</span>: o <strong>subdiácono recebe o Epistolário do MC ou do acólito</strong>, com inclinação mínima; porta o livro <strong>encostado ao peito</strong>.</p>
+            <p><strong>Quando começa a cantar:</strong> quando o celebrante diz <em>Iesum Christum</em>, o subdiácono vai ao meio, genuflecte, passa ao <strong>lado da epístola</strong> e <strong>canta a Epístola</strong> voltado para o altar.</p>
+            <p><strong>O que se segue:</strong> volta ao meio, genuflecte, sobe, ajoelha-se, inclina o livro ao celebrante, <strong>beija-lhe a mão e recebe a bênção</strong>; depois transporta o <strong>missal</strong> para o lado do Evangelho. <span class="cite">(§ 157, n. 754)</span></p>` },
+          { n: 87, q: "Como se posicionam o diácono e o subdiácono atrás do celebrante para o Intróito e o Kyrie na missa solene? Como se recita o Kyrie?", a: `
+            <p><strong>Posição</strong> <span class="cite">(§ 157, n. 751)</span>: o <strong>diácono</strong> sobe ao segundo degrau, à <strong>direita do celebrante</strong>, um pouco atrás; o <strong>subdiácono</strong> à direita do diácono, no plano — formando um <strong>semicírculo</strong>. Fazem o sinal da cruz e as inclinações com o celebrante e respondem ao Kyrie.</p>
+            <p><strong>Como se recita o Kyrie:</strong> nessa posição, <strong>alternando com o celebrante</strong>. Depois, o diácono vai ao segundo degrau atrás do celebrante, e o subdiácono ao plano atrás do diácono. <span class="cite">(§ 157, n. 751)</span></p>` }
         ]
       },
       {
         title: "XII. Bênção do Santíssimo Sacramento",
         range: "Questões 88–90",
         items: [
-          { n: 88, q: "Quais são os ministros da Bênção do Santíssimo e com que paramentos se veste o oficiante?", a: "" },
-          { n: 89, q: "Que particularidades tem a imposição de incenso na Bênção do Santíssimo, em comparação com a da missa? Como se faz a incensação do Santíssimo?", a: "" },
-          { n: 90, q: "No <em>Tantum ergo</em>, que reverência se faz às palavras <em>Veneremur cernui</em>, e o que se segue (segunda imposição, versículo, véu umeral)?", a: "" }
+          { n: 88, q: "Quais são os ministros da Bênção do Santíssimo e com que paramentos se veste o oficiante?", a: `
+            <p><strong>Ministros</strong> <span class="cite">(§ 179, n. 938–939)</span>: o <strong>celebrante (oficiante)</strong> e o <strong>diácono ou assistente</strong>; mais o <strong>turiferário</strong> e os <strong>acólitos</strong>.</p>
+            <p><strong>Paramentos do oficiante</strong> <span class="cite">(§ 179, n. 938)</span>: <strong>sobrepeliz, estola e pluvial</strong> (com D e S, veste alva e pluvial); o <strong>manípulo não se põe</strong>; paramentos <strong>sempre brancos</strong> (salvo logo após a missa/vésperas, com a cor do ofício); véu de ombros sempre branco.</p>` },
+          { n: 89, q: "Que particularidades tem a imposição de incenso na Bênção do Santíssimo, em comparação com a da missa? Como se faz a incensação do Santíssimo?", a: `
+            <p><strong>Particularidades da imposição</strong> <span class="cite">(§ 179, n. 940; n. 934)</span>:</p>
+            <ul>
+              <li>o celebrante <strong>NÃO benze o incenso</strong> (na missa, benze com <em>Ab illo benedicaris</em>);</li>
+              <li>faz-se <strong>ajoelhado</strong>; o diácono entrega a colherinha <strong>sem ósculo</strong>;</li>
+              <li>incensa-se o Santíssimo <strong>duas vezes</strong> (na exposição e ao <em>Genitori</em>).</li>
+            </ul>
+            <p><strong>Incensação do Santíssimo:</strong> de <strong>joelhos</strong>, com <strong>três ductos duplos</strong>, com inclinação medíocre antes e depois. <span class="cite">(§ 179, n. 943)</span></p>` },
+          { n: 90, q: "No <em>Tantum ergo</em>, que reverência se faz às palavras <em>Veneremur cernui</em>, e o que se segue (segunda imposição, versículo, véu umeral)?", a: `
+            <p><strong>Reverência:</strong> do <em>Tantum ergo</em> até o <em>Veneremur cernui</em> (inclusive), faz-se <strong>inclinação medíocre do corpo</strong>. <span class="cite">(§ 179, n. 941, 944)</span></p>
+            <p><strong>O que se segue</strong> <span class="cite">(§ 179, n. 944)</span>:</p>
+            <ol>
+              <li><strong>Segunda imposição de incenso</strong> — logo depois do <em>Veneremur cernui</em> (ou ao <em>Genitori</em>); incensa-se de novo o Santíssimo;</li>
+              <li><strong>Versículo e oração</strong> — <em>Panem de cœlo…</em> e a oração;</li>
+              <li><strong>Véu umeral</strong> — o celebrante recebe o <strong>véu de ombros</strong>, sobe ao supedâneo e recebe a custódia de pé, com as mãos envoltas no véu;</li>
+              <li><strong>A bênção</strong> — traça com a custódia o sinal da cruz sobre o povo; toca-se a campainha até acabar. Depois entrega o véu e rezam-se as Louvações (<em>Deus seja bendito…</em>).</li>
+            </ol>` }
         ]
       }
     ];
@@ -461,8 +1017,8 @@
         });
       });
 
-      // Modo padrao: Mostrar tudo.
-      apply("all");
+      // Modo padrao: Esconder tudo (secoes abertas, respostas fechadas) — clicar para revelar.
+      apply("hide");
     })();
   </script>
 </body>
