@@ -42,7 +42,8 @@
 
   // Tira de sprites por personagem (largura x altura de um quadro, em px).
   var WALKER_DIMS = {
-    padre: [178, 199],
+    padre: [196, 219],
+    diacono: [196, 219],
     acolito: [162, 198],
     vela: [142, 223],
     cruz: [136, 229],
@@ -76,11 +77,11 @@
 
     // Missa Solene
     "missa-solene-acolitos.html": ["vela", "vela", "cruz", "turiferario"],
-    "missa-solene-turiferario.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-mc.html": ["acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-subdiacono.html": ["acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-diacono.html": ["acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-celebrante.html": ["padre", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"]
+    "missa-solene-turiferario.html": ["acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-mc.html": ["acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-subdiacono.html": ["diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-diacono.html": ["diacono", "diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-celebrante.html": ["padre", "diacono", "diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"]
   };
 
   function init() {
