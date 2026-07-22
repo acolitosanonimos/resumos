@@ -122,6 +122,17 @@
     buildProgressDot();
     buildProcession();
     buildPageNav();
+    watchHeaderScroll();
+
+    // Ao rolar para baixo, marca o header para o risco vermelho e a bolinha
+    // sumirem (mesmo limiar da procissão); reaparecem no topo.
+    function watchHeaderScroll() {
+      var onScroll = function () {
+        root.classList.toggle("is-scrolled", (window.pageYOffset || document.documentElement.scrollTop) > 8);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
 
     // Progress dot sliding along the header's bottom red bar: far left on the
     // home (step 0), advancing one notch per resumo up to the last one.
