@@ -11,10 +11,10 @@
     {
       title: "Missa Cantada",
       items: [
-        { label: "Acólito 2", href: "acolito-2-missa-cantada.html" },
-        { label: "Acólito 1", href: "acolito-1-missa-cantada.html", blocked: true },
         { label: "Cruciferário", href: "cruciferario.html" },
         { label: "Tocheiro", href: "tocheiro.html" },
+        { label: "Acólito 2", href: "acolito-2-missa-cantada.html" },
+        { label: "Acólito 1", href: "acolito-1-missa-cantada.html", blocked: true },
         { label: "Turiferário", href: "turiferario-missa-cantada.html", blocked: true },
         { label: "Mc", href: "mc-missa-cantada.html", blocked: true }
       ]
@@ -49,18 +49,38 @@
     turiferario: [209, 199]
   };
 
-  // Marcas da procissão: páginas onde a composição muda. Fora delas, cada
-  // página herda a marca anterior na sequência (carry-forward). A última
-  // figura (mais à direita) fica sob a bolinha do progresso.
+  // Marcas da procissão: composição por página. A última figura (mais à
+  // direita) fica sob a bolinha do progresso; a fila cresce para a esquerda.
+  // Cada bloco tem sua própria progressão, do mais simples ao mais completo;
+  // páginas sem marca herdam a anterior por carry-forward (aqui, todas têm).
   var WALKER_MARKS = {
     home: ["acolito"],
+
+    // Missa Rezada
+    "acolito-2-missa-rezada.html": ["acolito"],
     "acolito-1-missa-rezada.html": ["acolito", "acolito"],
+    "manual-missa-rezada.html": ["padre", "acolito", "acolito"],
+
+    // Missa Cantada
+    "cruciferario.html": ["turiferario"],
+    "tocheiro.html": ["cruz", "turiferario"],
     "acolito-2-missa-cantada.html": ["vela", "cruz", "turiferario"],
-    "tocheiro.html": ["vela", "vela", "cruz", "turiferario"],
-    // O grupo "A decorar" não tem marca própria: herda o Tocheiro por
-    // carry-forward, ficando igual ao Mc da Missa Cantada.
-    "missa-solene-acolitos.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-subdiacono.html": ["padre", "acolito", "vela", "vela", "cruz", "turiferario"]
+    "acolito-1-missa-cantada.html": ["vela", "vela", "cruz", "turiferario"],
+    "turiferario-missa-cantada.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
+    "mc-missa-cantada.html": ["padre", "acolito", "vela", "vela", "cruz", "turiferario"],
+
+    // A decorar
+    "oracoes-a-decorar.html": ["acolito"],
+    "oracao-arquiconfraria.html": ["acolito", "acolito"],
+    "regras-recomendacoes.html": ["padre", "acolito", "acolito"],
+
+    // Missa Solene
+    "missa-solene-acolitos.html": ["vela", "vela", "cruz", "turiferario"],
+    "missa-solene-turiferario.html": ["acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-mc.html": ["acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-subdiacono.html": ["acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-diacono.html": ["acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-celebrante.html": ["padre", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"]
   };
 
   function init() {
@@ -188,8 +208,21 @@
       // travada na margem para não transbordar pela esquerda nas páginas
       // iniciais (onde a bolinha fica junto do canto esquerdo). Recalcula no resize.
       var place = function () {
+        // Volta à escala do CSS (0.34 mobile / 0.4 desktop) antes de medir, para
+        // que aumentar a janela restaure o tamanho cheio.
+        row.style.removeProperty("--wscale");
         var rootW = root.getBoundingClientRect().width;
         var dotCenter = frac * (rootW - 14) + 7;
+        // Largura máxima da fila: a tela inteira menos uma margem. Medir pela
+        // largura (não pela bolinha) mantém a escala igual em todas as páginas
+        // no desktop; só encolhe quando a fila realmente não cabe (mobile com
+        // muitos bonecos).
+        var avail = rootW - 8;
+        // Se a fila não couber, reduz a escala na proporção para caber.
+        if (row.offsetWidth > avail && avail > 0) {
+          var base = parseFloat(getComputedStyle(row).getPropertyValue("--wscale")) || 0.34;
+          row.style.setProperty("--wscale", (base * avail / row.offsetWidth).toFixed(3));
+        }
         row.style.left = Math.max(4, dotCenter - row.offsetWidth) + "px";
       };
       place();

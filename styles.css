@@ -63,6 +63,10 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 3px;
+  /* Altura fixa = a do boneco mais alto (cruz 229 × escala): assim os pés de
+     todas as filas caem na mesma linha, mesmo nas páginas de acólito sozinho
+     (frame mais baixo), coincidindo com a borda superior dos botões. */
+  min-height: calc(229 * var(--wscale) * 1px);
   transition: left 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
   pointer-events: none;
   z-index: 19;
@@ -604,7 +608,10 @@ h1 {
 }
 
 .content-shell {
-  padding: 74px 0 86px;
+  /* padding-top = altura do boneco mais alto (cruz 229 × escala): assim a
+     borda superior dos botões cai exatamente na linha dos pés da procissão.
+     Mobile: 229 × 0.34 ≈ 78px. */
+  padding: 78px 0 86px;
 }
 
 .page-nav {
@@ -1281,6 +1288,16 @@ h1 {
 }
 
 @media (min-width: 861px) {
+  /* Desktop: bonecos da procissao levemente maiores */
+  .nav-procession {
+    --wscale: 0.4;
+  }
+
+  /* Desktop: borda superior dos botões na linha dos pés (cruz 229 × 0.4 ≈ 92px) */
+  .content-shell {
+    padding-top: 92px;
+  }
+
   /* Desktop: home mais compacta - menos espaco vertical, logo/titulo/botoes menores */
   .hero {
     padding: 26px 0 8px;
