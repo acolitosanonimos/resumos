@@ -71,17 +71,17 @@
     "mc-missa-cantada.html": ["padre", "acolito", "vela", "vela", "cruz", "turiferario"],
 
     // A decorar
-    "oracoes-a-decorar.html": ["acolito"],
-    "oracao-arquiconfraria.html": ["acolito", "acolito"],
-    "regras-recomendacoes.html": ["padre", "acolito", "acolito"],
+    "oracoes-a-decorar.html": ["padre", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "oracao-arquiconfraria.html": ["padre", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "regras-recomendacoes.html": ["padre", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
 
     // Missa Solene
-    "missa-solene-acolitos.html": ["vela", "vela", "cruz", "turiferario"],
-    "missa-solene-turiferario.html": ["acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-mc.html": ["acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-subdiacono.html": ["diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-diacono.html": ["diacono", "diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
-    "missa-solene-celebrante.html": ["padre", "diacono", "diacono", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"]
+    "missa-solene-acolitos.html": ["padre", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-turiferario.html": ["padre", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-mc.html": ["padre", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-subdiacono.html": ["padre", "diacono", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-diacono.html": ["padre", "diacono", "diacono", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"],
+    "missa-solene-celebrante.html": ["padre", "diacono", "diacono", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "acolito", "vela", "vela", "cruz", "turiferario"]
   };
 
   function init() {
